@@ -12,7 +12,7 @@ keywords = ["game", "graphics", "basis", "basis-universal", "universal", "textur
 categories = ["game-development", "game-engines", "graphics", "multimedia", "rendering::engine", "api-bindings", "compression", "encoding"]
 
 [dependencies]
-basis-universal-sys = { version = "00.0.1", path = "../basis-universal-sys"}
+basis-universal-sys = { version = "0.0.1", path = "../basis-universal-sys"}
 lazy_static = "1.4.0"
 
 [dev-dependencies]
