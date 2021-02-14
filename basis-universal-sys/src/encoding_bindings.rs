@@ -157,10 +157,19 @@ extern "C" {
     pub fn image_clear(image: *mut basisu_image);
 }
 extern "C" {
-    pub fn image_resize_with_pitch(image: *mut basisu_image, w: u32, h: u32, p: u32);
+    pub fn image_resize_with_pitch(
+        image: *mut basisu_image,
+        w: u32,
+        h: u32,
+        p: u32,
+    );
 }
 extern "C" {
-    pub fn image_resize(image: *mut basisu_image, w: u32, h: u32);
+    pub fn image_resize(
+        image: *mut basisu_image,
+        w: u32,
+        h: u32,
+    );
 }
 extern "C" {
     pub fn image_init(
@@ -180,7 +189,11 @@ extern "C" {
     ) -> bool;
 }
 extern "C" {
-    pub fn image_get_pixel_at_unchecked(image: *mut basisu_image, x: u32, y: u32) -> ColorU8;
+    pub fn image_get_pixel_at_unchecked(
+        image: *mut basisu_image,
+        x: u32,
+        y: u32,
+    ) -> ColorU8;
 }
 extern "C" {
     pub fn image_get_width(image: *mut basisu_image) -> u32;
@@ -195,13 +208,23 @@ extern "C" {
     pub fn image_get_total_pixels(image: *mut basisu_image) -> u32;
 }
 extern "C" {
-    pub fn image_get_block_width(image: *mut basisu_image, w: u32) -> u32;
+    pub fn image_get_block_width(
+        image: *mut basisu_image,
+        w: u32,
+    ) -> u32;
 }
 extern "C" {
-    pub fn image_get_block_height(image: *mut basisu_image, h: u32) -> u32;
+    pub fn image_get_block_height(
+        image: *mut basisu_image,
+        h: u32,
+    ) -> u32;
 }
 extern "C" {
-    pub fn image_get_total_blocks(image: *mut basisu_image, w: u32, h: u32) -> u32;
+    pub fn image_get_total_blocks(
+        image: *mut basisu_image,
+        w: u32,
+        h: u32,
+    ) -> u32;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -280,13 +303,19 @@ extern "C" {
     ) -> *mut basisu_image;
 }
 extern "C" {
-    pub fn compressor_params_resize_source_image_list(params: *mut CompressorParams, size: size_t);
+    pub fn compressor_params_resize_source_image_list(
+        params: *mut CompressorParams,
+        size: size_t,
+    );
 }
 extern "C" {
     pub fn compressor_params_clear_source_image_list(params: *mut CompressorParams);
 }
 extern "C" {
-    pub fn compressor_params_set_status_output(params: *mut CompressorParams, status_output: bool);
+    pub fn compressor_params_set_status_output(
+        params: *mut CompressorParams,
+        status_output: bool,
+    );
 }
 extern "C" {
     pub fn compressor_params_set_quality_level(
@@ -307,7 +336,10 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn compressor_params_set_uastc(params: *mut CompressorParams, is_uastc: bool);
+    pub fn compressor_params_set_uastc(
+        params: *mut CompressorParams,
+        is_uastc: bool,
+    );
 }
 extern "C" {
     pub fn compressor_params_set_generate_mipmaps(
@@ -341,7 +373,10 @@ extern "C" {
     pub fn compressor_delete(compressor: *mut Compressor);
 }
 extern "C" {
-    pub fn compressor_init(compressor: *mut Compressor, params: *const CompressorParams) -> bool;
+    pub fn compressor_init(
+        compressor: *mut Compressor,
+        params: *const CompressorParams,
+    ) -> bool;
 }
 extern "C" {
     pub fn compressor_process(compressor: *mut Compressor) -> basisu_basis_compressor_error_code;

@@ -1,54 +1,56 @@
 use super::*;
 use basis_universal_sys as sys;
 
-// // Returns true if the transcoder texture type is an uncompressed (raw pixel) format.
-// bool basis_transcoder_format_is_uncompressed(transcoder_texture_format tex_type);
-//
-// // Returns the # of bytes per pixel for uncompressed formats, or 0 for block texture formats.
-// uint32_t basis_get_uncompressed_bytes_per_pixel(transcoder_texture_format fmt);
-//
-// // Returns the block width for the specified texture format, which is currently either 4 or 8 for FXT1.
-// uint32_t basis_get_block_width(transcoder_texture_format tex_type);
-//
-// // Returns the block height for the specified texture format, which is currently always 4.
-// uint32_t basis_get_block_height(transcoder_texture_format tex_type);
-//
-// // Returns true if the specified format was enabled at compile time.
-// bool basis_is_format_supported(transcoder_texture_format tex_type, basis_tex_format fmt = basis_tex_format::cETC1S);
-//
-// // Validates that the output buffer is large enough to hold the entire transcoded texture.
-// // For uncompressed texture formats, most input parameters are in pixels, not blocks. Blocks are 4x4 pixels.
-// bool basis_validate_output_buffer_size(transcoder_texture_format target_format,
-//     uint32_t output_blocks_buf_size_in_blocks_or_pixels,
-//     uint32_t orig_width, uint32_t orig_height,
-//     uint32_t output_row_pitch_in_blocks_or_pixels,
-//     uint32_t output_rows_in_pixels,
-//     uint32_t total_slice_blocks);
-
 pub struct Transcoder(*mut sys::Transcoder);
+
+#[derive(Default, Debug, Copy, Clone)]
+pub struct ImageLevelDescription {
+    pub original_width: u32,
+    pub original_height: u32,
+    pub block_count: u32,
+}
+
+pub type ImageInfo = sys::basist_basisu_image_info;
+pub type ImageLevelInfo = sys::basist_basisu_image_level_info;
+
+#[derive(Default)]
+pub struct TranscodeParameters {
+    pub image_index: u32,
+    pub level_index: u32,
+    pub decode_flags: Option<DecodeFlags>,
+    pub output_row_pitch_in_blocks_or_pixels: Option<u32>,
+    pub output_rows_in_pixels: Option<u32>,
+}
+
+#[derive(Debug, Copy, Clone)]
+pub enum TranscodeError {
+    TranscodeFormatNotSupported,
+    ImageLevelNotFound,
+    TranscodeFailed
+}
 
 impl Transcoder {
     pub fn new() -> Transcoder {
         unsafe { Transcoder(sys::transcoder_new()) }
     }
 
-    pub fn get_total_images(
+    pub fn image_count(
         &self,
         data: &[u8],
     ) -> u32 {
         unsafe { sys::transcoder_get_total_images(self.0, data.as_ptr() as _, data.len() as u32) }
     }
 
-    pub fn get_tex_format(
+    pub fn basis_texture_format(
         &self,
         data: &[u8],
-    ) -> TextureFormat {
+    ) -> BasisTextureFormat {
         unsafe {
             sys::transcoder_get_tex_format(self.0, data.as_ptr() as _, data.len() as u32).into()
         }
     }
 
-    pub fn get_total_image_levels(
+    pub fn image_level_count(
         &self,
         data: &[u8],
         image_index: u32,
@@ -63,15 +65,51 @@ impl Transcoder {
         }
     }
 
-    //    // Returns basic information about an image. Note that orig_width/orig_height may not be a multiple of 4.
-    //    bool get_image_level_desc(const void *pData, uint32_t data_size, uint32_t image_index, uint32_t level_index, uint32_t &orig_width, uint32_t &orig_height, uint32_t &total_blocks) const;
-    //
-    //    // Returns information about the specified image.
-    //    bool get_image_info(const void *pData, uint32_t data_size, basisu_image_info &image_info, uint32_t image_index) const;
-    //
-    //    // Returns information about the specified image's mipmap level.
-    //    bool get_image_level_info(const void *pData, uint32_t data_size, basisu_image_level_info &level_info, uint32_t image_index, uint32_t level_index) const;
-    //
+    /// Returns basic information about an image. Note that orig_width/orig_height may not be a multiple of 4.
+    pub fn image_level_description(&self, data: &[u8], image_index: u32, level_index: u32) -> Option<ImageLevelDescription> {
+        let mut description = ImageLevelDescription::default();
+        unsafe {
+            if sys::transcoder_get_image_level_desc(
+                self.0,
+                data.as_ptr() as _,
+                data.len() as u32,
+                image_index,
+                level_index,
+                &mut description.original_width,
+                &mut description.original_height,
+                &mut description.block_count
+            ) {
+                Some(description)
+            } else {
+                None
+            }
+        }
+    }
+
+    /// Returns information about the specified image.
+    pub fn image_info(&self, data: &[u8], image_index: u32) -> Option<ImageInfo> {
+        let mut image_info = unsafe { std::mem::zeroed::<ImageInfo>() };
+        unsafe {
+            if sys::transcoder_get_image_info(self.0, data.as_ptr() as _, data.len() as u32, &mut image_info, image_index) {
+                Some(image_info)
+            } else {
+                None
+            }
+        }
+    }
+
+    /// Returns information about the specified image's mipmap level.
+    pub fn image_level_info(&self, data: &[u8], image_index: u32, level_index: u32) -> Option<ImageLevelInfo> {
+        let mut image_level_info = unsafe { std::mem::zeroed::<ImageLevelInfo>() };
+        unsafe {
+            if sys::transcoder_get_image_level_info(self.0, data.as_ptr() as _, data.len() as u32, &mut image_level_info, image_index, level_index) {
+                Some(image_level_info)
+            } else {
+                None
+            }
+        }
+    }
+
     //    // Get a description of the basis file and low-level information about each slice.
     //    bool get_file_info(const void *pData, uint32_t data_size, basisu_file_info &file_info) const;
 
@@ -106,24 +144,83 @@ impl Transcoder {
         unsafe { sys::transcoder_get_ready_to_transcode(self.0) }
     }
 
-    //    // transcode_image_level() decodes a single mipmap level from the .basis file to any of the supported output texture formats.
-    //    // It'll first find the slice(s) to transcode, then call transcode_slice() one or two times to decode both the color and alpha texture data (or RG texture data from two slices for BC5).
-    //    // If the .basis file doesn't have alpha slices, the output alpha blocks will be set to fully opaque (all 255's).
-    //    // Currently, to decode to PVRTC1 the basis texture's dimensions in pixels must be a power of 2, due to PVRTC1 format requirements.
-    //    // output_blocks_buf_size_in_blocks_or_pixels should be at least the image level's total_blocks (num_blocks_x * num_blocks_y), or the total number of output pixels if fmt==cTFRGBA32.
-    //    // output_row_pitch_in_blocks_or_pixels: Number of blocks or pixels per row. If 0, the transcoder uses the slice's num_blocks_x or orig_width (NOT num_blocks_x * 4). Ignored for PVRTC1 (due to texture swizzling).
-    //    // output_rows_in_pixels: Ignored unless fmt is cRGBA32. The total number of output rows in the output buffer. If 0, the transcoder assumes the slice's orig_height (NOT num_blocks_y * 4).
-    //    // Notes:
-    //    // - basisu_transcoder_init() must have been called first to initialize the transcoder lookup tables before calling this function.
-    //    // - This method assumes the output texture buffer is readable. In some cases to handle alpha, the transcoder will write temporary data to the output texture in
-    //    // a first pass, which will be read in a second pass.
-    //    bool transcode_image_level(
-    //            const void *pData, uint32_t data_size,
-    //            uint32_t image_index, uint32_t level_index,
-    //            void *pOutput_blocks, uint32_t output_blocks_buf_size_in_blocks_or_pixels,
-    //            transcoder_texture_format fmt,
-    //            uint32_t decode_flags = 0, uint32_t output_row_pitch_in_blocks_or_pixels = 0, basisu_transcoder_state *pState = nullptr, uint32_t output_rows_in_pixels = 0) const;
-    //
+    /// transcode_image_level() decodes a single mipmap level from the .basis file to any of the supported output texture formats.
+    /// It'll first find the slice(s) to transcode, then call transcode_slice() one or two times to decode both the color and alpha texture data (or RG texture data from two slices for BC5).
+    /// If the .basis file doesn't have alpha slices, the output alpha blocks will be set to fully opaque (all 255's).
+    /// Currently, to decode to PVRTC1 the basis texture's dimensions in pixels must be a power of 2, due to PVRTC1 format requirements.
+    /// output_blocks_buf_size_in_blocks_or_pixels should be at least the image level's total_blocks (num_blocks_x * num_blocks_y), or the total number of output pixels if fmt==cTFRGBA32.
+    /// output_row_pitch_in_blocks_or_pixels: Number of blocks or pixels per row. If 0, the transcoder uses the slice's num_blocks_x or orig_width (NOT num_blocks_x * 4). Ignored for PVRTC1 (due to texture swizzling).
+    /// output_rows_in_pixels: Ignored unless fmt is cRGBA32. The total number of output rows in the output buffer. If 0, the transcoder assumes the slice's orig_height (NOT num_blocks_y * 4).
+    /// Notes:
+    /// - basisu_transcoder_init() must have been called first to initialize the transcoder lookup tables before calling this function.
+    /// - This method assumes the output texture buffer is readable. In some cases to handle alpha, the transcoder will write temporary data to the output texture in
+    /// a first pass, which will be read in a second pass.
+    pub fn transcode_image_level(
+        &self,
+        data: &[u8],
+        transcode_format: TranscoderTextureFormat,
+        transcode_parameters: TranscodeParameters
+    ) -> Result<Vec<u8>, TranscodeError> {
+        let image_index = transcode_parameters.image_index;
+        let level_index = transcode_parameters.level_index;
+
+        //
+        // Check that the transcode format is supported for the stored texture's basis format
+        //
+        let basis_format = self.basis_texture_format(data);
+        if !basis_format.can_transcode_to_format(transcode_format) {
+            return Err(TranscodeError::TranscodeFormatNotSupported);
+        }
+
+        //
+        // Determine required size for the buffer
+        //
+        let description = self.image_level_description(data, image_index, level_index).ok_or(TranscodeError::ImageLevelNotFound)?;
+        let required_buffer_bytes = transcode_format.calculate_minimum_output_buffer_bytes(
+            description.original_width,
+            description.original_height,
+            description.block_count,
+            transcode_parameters.output_row_pitch_in_blocks_or_pixels,
+            transcode_parameters.output_rows_in_pixels
+        ) as usize;
+
+        //
+        // unwrap_or() the optional parameters
+        //
+        let decode_flags = transcode_parameters.decode_flags.unwrap_or(DecodeFlags::empty());
+        let output_row_pitch_in_blocks_or_pixels = transcode_parameters.output_row_pitch_in_blocks_or_pixels.unwrap_or(0);
+        let output_rows_in_pixels = transcode_parameters.output_rows_in_pixels.unwrap_or(0);
+        let transcoder_state = std::ptr::null_mut();
+
+        //
+        // Transcode
+        //
+        let mut output = vec![0_u8; required_buffer_bytes];
+        let success = unsafe {
+            sys::transcoder_transcode_image_level(
+                self.0,
+                data.as_ptr() as _,
+                data.len() as u32,
+                image_index,
+                level_index,
+                output.as_mut_ptr() as _,
+                output.len() as u32,
+                transcode_format.into(),
+                decode_flags.bits(),
+                output_row_pitch_in_blocks_or_pixels,
+                transcoder_state,
+                output_rows_in_pixels
+            )
+        };
+
+        if success {
+            Ok(output)
+        } else {
+            Err(TranscodeError::TranscodeFailed)
+        }
+    }
+
+
     //    // Finds the basis slice corresponding to the specified image/level/alpha params, or -1 if the slice can't be found.
     //    int find_slice(const void *pData, uint32_t data_size, uint32_t image_index, uint32_t level_index, bool alpha_data) const;
     //

@@ -14,6 +14,7 @@ categories = ["game-development", "graphics", "api-bindings", "compression", "en
 [dependencies]
 basis-universal-sys = { version = "=0.0.1", path = "../basis-universal-sys" }
 lazy_static = "1.4.0"
+bitflags = "1.2.1"
 
 [dev-dependencies]
 image = "0.23.13"

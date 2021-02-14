@@ -1,4 +1,4 @@
-bindgen vendor/basis_universal_transcoder_wrapper.cpp -o src/transcoding_bindings.rs \
+bindgen vendor/transcoding_wrapper.cpp -o src/transcoding_bindings.rs \
   --whitelist-function basis_get_bytes_per_block_or_pixel \
   --whitelist-function basis_get_format_name \
   --whitelist-function basis_get_block_format_name \
@@ -6,22 +6,36 @@ bindgen vendor/basis_universal_transcoder_wrapper.cpp -o src/transcoding_binding
   --whitelist-function basis_get_basisu_texture_format \
   --whitelist-function basis_get_texture_type_name \
   \
+  --whitelist-function basis_transcoder_format_is_uncompressed \
+  --whitelist-function basis_get_uncompressed_bytes_per_pixel \
+  --whitelist-function basis_get_block_width \
+  --whitelist-function basis_get_block_height \
+  --whitelist-function basis_is_format_supported \
+  --whitelist-function basis_validate_output_buffer_size \
+  \
   --whitelist-function transcoder_new \
   --whitelist-function transcoder_delete \
   --whitelist-function transcoder_get_total_images \
   --whitelist-function transcoder_get_tex_format \
   --whitelist-function transcoder_get_total_image_levels \
   \
+  --whitelist-function transcoder_get_image_level_desc \
+  --whitelist-function transcoder_get_image_info \
+  --whitelist-function transcoder_get_image_level_info \
+  \
   --whitelist-function transcoder_start_transcoding \
   --whitelist-function transcoder_stop_transcoding \
   --whitelist-function transcoder_get_ready_to_transcode \
+  --whitelist-function transcoder_transcode_image_level \
   \
   --whitelist-function basisu_transcoder_init \
   \
   --opaque-type Transcoder \
+  --opaque-type basist::basisu_transcoder_state \
+  \
   -- -x c++ -std=c++14
 
-bindgen vendor/basis_universal_encoder_wrapper.cpp -o src/encoding_bindings.rs \
+bindgen vendor/encoding_wrapper.cpp -o src/encoding_bindings.rs \
   --whitelist-function image_clear \
   --whitelist-function image_resize_with_pitch \
   --whitelist-function image_resize \

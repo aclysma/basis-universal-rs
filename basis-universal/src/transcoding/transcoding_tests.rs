@@ -50,7 +50,7 @@ fn test_new_transcoder() {
 fn test_transcoder_get_total_images() {
     let basis_file = include_bytes!("../../test_assets/rust-logo-etc.basis");
     let transcoder = Transcoder::new();
-    assert_eq!(transcoder.get_total_images(basis_file), 1);
+    assert_eq!(transcoder.image_count(basis_file), 1);
     std::mem::drop(transcoder);
 }
 
@@ -58,12 +58,12 @@ fn test_transcoder_get_total_images() {
 fn test_transcoder_get_tex_format() {
     let basis_file = include_bytes!("../../test_assets/rust-logo-etc.basis");
     let transcoder = Transcoder::new();
-    assert_eq!(transcoder.get_tex_format(basis_file), TextureFormat::ETC1);
+    assert_eq!(transcoder.basis_texture_format(basis_file), BasisTextureFormat::ETC1S);
     std::mem::drop(transcoder);
 
     let basis_file = include_bytes!("../../test_assets/rust-logo-uastc.basis");
     let transcoder = Transcoder::new();
-    assert_eq!(transcoder.get_tex_format(basis_file), TextureFormat::ETC1S);
+    assert_eq!(transcoder.basis_texture_format(basis_file), BasisTextureFormat::UASTC4x4);
     std::mem::drop(transcoder);
 }
 
@@ -71,6 +71,57 @@ fn test_transcoder_get_tex_format() {
 fn test_transcoder_get_total_image_levels() {
     let basis_file = include_bytes!("../../test_assets/rust-logo-etc.basis");
     let transcoder = Transcoder::new();
-    assert_eq!(transcoder.get_total_image_levels(basis_file, 0), 7);
+    assert_eq!(transcoder.image_level_count(basis_file, 0), 7);
+    std::mem::drop(transcoder);
+}
+
+#[test]
+fn test_transcoder_transcode_etc() {
+    let basis_file = include_bytes!("../../test_assets/rust-logo-etc.basis");
+    do_test_transcoder_transcode(basis_file, "test_assets/test_transcode_image_etc.png");
+}
+
+#[test]
+fn test_transcoder_transcode_uastc() {
+    let basis_file = include_bytes!("../../test_assets/rust-logo-uastc.basis");
+    do_test_transcoder_transcode(basis_file, "test_assets/test_transcode_image_uastc.png");
+}
+
+// Transcode to a variety of formats
+fn do_test_transcoder_transcode(basis_file: &[u8], _out_path: &str) {
+    let mut transcoder = Transcoder::new();
+    transcoder.prepare_transcoding(basis_file).unwrap();
+
+    transcoder.transcode_image_level(basis_file, TranscoderTextureFormat::ETC1_RGB, TranscodeParameters {
+        image_index: 0,
+        level_index: 0,
+        ..Default::default()
+    }).unwrap();
+
+    transcoder.transcode_image_level(basis_file, TranscoderTextureFormat::ASTC_4x4_RGBA, TranscodeParameters {
+        image_index: 0,
+        level_index: 0,
+        ..Default::default()
+    }).unwrap();
+
+    if transcoder.basis_texture_format(basis_file) == BasisTextureFormat::ETC1S {
+        transcoder.transcode_image_level(basis_file, TranscoderTextureFormat::FXT1_RGB, TranscodeParameters {
+            image_index: 0,
+            level_index: 0,
+            ..Default::default()
+        }).unwrap();
+    }
+
+    let _result = transcoder.transcode_image_level(basis_file, TranscoderTextureFormat::RGBA32, TranscodeParameters {
+        image_index: 0,
+        level_index: 0,
+        ..Default::default()
+    }).unwrap();
+    transcoder.end_transcoding();
+
+    //let description = transcoder.image_level_description(basis_file, 0, 0).unwrap();
+    //let image = image::RgbaImage::from_raw(description.original_width, description.original_height, _result).unwrap();
+    //image.save_with_format(_out_path, image::ImageFormat::Png).unwrap();
+
     std::mem::drop(transcoder);
 }
