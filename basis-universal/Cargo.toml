@@ -1,6 +1,6 @@
 [package]
 name = "basis-universal"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Philip Degarmo <aclysma@gmail.com>"]
 edition = "2018"
 license = "MIT OR Apache-2.0"
@@ -12,7 +12,7 @@ keywords = ["game", "basis-universal", "texture", "compression", "gpu"]
 categories = ["game-development", "graphics", "api-bindings", "compression", "encoding"]
 
 [dependencies]
-basis-universal-sys = { version = "=0.0.1", path = "../basis-universal-sys" }
+basis-universal-sys = { version = "=0.0.2", path = "../basis-universal-sys" }
 lazy_static = "1.4.0"
 bitflags = "1.2.1"
 
