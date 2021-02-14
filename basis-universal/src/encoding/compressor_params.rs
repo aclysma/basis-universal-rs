@@ -1,5 +1,5 @@
 use super::*;
-use crate::UserData;
+use crate::{BasisTextureFormat, UserData};
 use basis_universal_sys as sys;
 pub use basis_universal_sys::ColorU8;
 
@@ -100,10 +100,18 @@ impl CompressorParams {
         }
     }
 
-    pub fn set_uastc(
+    /// Set the basis format we will compress to. See basis documentation for details. This
+    /// corresponds to the -uastc flag in the basisu command line tool and the m_uastc boolean param
+    /// on `basis_compressor_params` in the original library
+    pub fn set_basis_format(
         &mut self,
-        is_uastc: bool,
+        basis_format: BasisTextureFormat,
     ) {
+        let is_uastc = match basis_format {
+            BasisTextureFormat::ETC1S => false,
+            BasisTextureFormat::UASTC4x4 => true,
+        };
+
         unsafe {
             sys::compressor_params_set_uastc(self.0, is_uastc);
         }

@@ -1,4 +1,5 @@
 use super::*;
+use crate::BasisTextureFormat;
 use image::GenericImageView;
 
 #[test]
@@ -36,7 +37,7 @@ fn test_compressor_params_smoketest_bindings() {
     compressor_params.set_quality_level(Some(128));
     compressor_params.set_use_global_codebook(true);
     compressor_params.set_auto_use_global_codebook(true);
-    compressor_params.set_uastc(true);
+    compressor_params.set_basis_format(BasisTextureFormat::UASTC4x4);
     compressor_params.set_generate_mipmaps(true);
 
     compressor_params.clear();
