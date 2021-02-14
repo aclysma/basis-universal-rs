@@ -85,6 +85,21 @@ bindgen vendor/encoding_wrapper.cpp -o src/encoding_bindings.rs \
   \
   --whitelist-function basisu_encoder_init \
   \
+  --whitelist-var basisu::BASISU_MAX_SUPPORTED_TEXTURE_DIMENSION \
+  --whitelist-var basisu::BASISU_DEFAULT_ENDPOINT_RDO_THRESH \
+  --whitelist-var basisu::BASISU_DEFAULT_SELECTOR_RDO_THRESH \
+  --whitelist-var basisu::BASISU_DEFAULT_QUALITY \
+  --whitelist-var basisu::BASISU_DEFAULT_HYBRID_SEL_CB_QUALITY_THRESH \
+  --whitelist-var basisu::BASISU_MAX_IMAGE_DIMENSION \
+  --whitelist-var basisu::BASISU_QUALITY_MIN \
+  --whitelist-var basisu::BASISU_QUALITY_MAX \
+  --whitelist-var basisu::BASISU_MAX_ENDPOINT_CLUSTERS \
+  --whitelist-var basisu::BASISU_MAX_SELECTOR_CLUSTERS \
+  --whitelist-var basisu::BASISU_MAX_SLICES \
+  --whitelist-var basisu::BASISU_RDO_UASTC_DICT_SIZE_DEFAULT \
+  --whitelist-var basisu::BASISU_RDO_UASTC_DICT_SIZE_MIN \
+  --whitelist-var basisu::BASISU_RDO_UASTC_DICT_SIZE_MAX \
+  \
   --opaque-type CompressorParams \
   --opaque-type Compressor \
   --opaque-type basisu::image \

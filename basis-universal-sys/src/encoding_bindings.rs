@@ -21,6 +21,20 @@ fn bindgen_test_layout_basisu_image() {
         concat!("Alignment of ", stringify!(basisu_image))
     );
 }
+pub const basisu_BASISU_MAX_SUPPORTED_TEXTURE_DIMENSION: u32 = 16384;
+pub const basisu_BASISU_DEFAULT_ENDPOINT_RDO_THRESH: f32 = 1.5;
+pub const basisu_BASISU_DEFAULT_SELECTOR_RDO_THRESH: f32 = 1.25;
+pub const basisu_BASISU_DEFAULT_QUALITY: ::std::os::raw::c_int = 128;
+pub const basisu_BASISU_DEFAULT_HYBRID_SEL_CB_QUALITY_THRESH: f32 = 2.0;
+pub const basisu_BASISU_MAX_IMAGE_DIMENSION: u32 = 16384;
+pub const basisu_BASISU_QUALITY_MIN: u32 = 1;
+pub const basisu_BASISU_QUALITY_MAX: u32 = 255;
+pub const basisu_BASISU_MAX_ENDPOINT_CLUSTERS: u32 = 16128;
+pub const basisu_BASISU_MAX_SELECTOR_CLUSTERS: u32 = 16128;
+pub const basisu_BASISU_MAX_SLICES: u32 = 16777215;
+pub const basisu_BASISU_RDO_UASTC_DICT_SIZE_DEFAULT: ::std::os::raw::c_int = 32768;
+pub const basisu_BASISU_RDO_UASTC_DICT_SIZE_MIN: ::std::os::raw::c_int = 256;
+pub const basisu_BASISU_RDO_UASTC_DICT_SIZE_MAX: ::std::os::raw::c_int = 65536;
 pub const basisu_basis_compressor_error_code_cECSuccess: basisu_basis_compressor_error_code = 0;
 pub const basisu_basis_compressor_error_code_cECFailedReadingSourceImages:
     basisu_basis_compressor_error_code = 1;
