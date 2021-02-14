@@ -347,6 +347,13 @@ extern "C" {
         generate_mipmaps: bool,
     );
 }
+extern "C" {
+    pub fn compressor_params_set_userdata(
+        params: *mut CompressorParams,
+        userdata0: u32,
+        userdata1: u32,
+    );
+}
 #[repr(C)]
 #[repr(align(8))]
 #[derive(Debug, Copy, Clone)]
@@ -422,6 +429,15 @@ fn bindgen_test_layout_CompressorBasisFile() {
 }
 extern "C" {
     pub fn compressor_get_output_basis_file(compressor: *mut Compressor) -> CompressorBasisFile;
+}
+extern "C" {
+    pub fn compressor_get_basis_file_size(compressor: *const Compressor) -> u32;
+}
+extern "C" {
+    pub fn compressor_get_basis_bits_per_texel(compressor: *const Compressor) -> f64;
+}
+extern "C" {
+    pub fn compressor_get_any_source_image_has_alpha(compressor: *const Compressor) -> bool;
 }
 extern "C" {
     pub fn basisu_encoder_init();

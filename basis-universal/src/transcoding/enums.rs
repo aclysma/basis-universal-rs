@@ -1,6 +1,43 @@
 use basis_universal_sys as sys;
 use std::ffi::CStr;
 
+#[derive(Copy, Clone, Debug, PartialEq)]
+#[repr(u32)]
+pub enum BasisTextureType {
+    /// An arbitrary array of 2D RGB or RGBA images with optional mipmaps, array size = # images, each image may have a different resolution and # of mipmap levels
+    TextureType2D = sys::basist_basis_texture_type_cBASISTexType2D,
+    /// An array of 2D RGB or RGBA images with optional mipmaps, array size = # images, each image has the same resolution and mipmap levels
+    TextureType2DArray = sys::basist_basis_texture_type_cBASISTexType2DArray,
+    /// an array of cubemap levels, total # of images must be divisable by 6, in X+, X-, Y+, Y-, Z+, Z- order, with optional mipmaps
+    TextureTypeCubemapArray = sys::basist_basis_texture_type_cBASISTexTypeCubemapArray,
+    /// An array of 2D video frames, with optional mipmaps, # frames = # images, each image has the same resolution and # of mipmap levels
+    TextureTypeVideoFrames = sys::basist_basis_texture_type_cBASISTexTypeVideoFrames,
+    /// A 3D texture with optional mipmaps, Z dimension = # images, each image has the same resolution and # of mipmap levels
+    TextureTypeVolume = sys::basist_basis_texture_type_cBASISTexTypeVolume,
+}
+
+impl Into<sys::basist_basis_texture_type> for BasisTextureType {
+    fn into(self) -> sys::basist_basis_texture_type {
+        self as sys::basist_basis_texture_type
+    }
+}
+
+impl From<sys::basist_basis_texture_type> for BasisTextureType {
+    fn from(value: sys::basist_basis_texture_type) -> Self {
+        unsafe { std::mem::transmute(value as u32) }
+    }
+}
+
+impl BasisTextureType {
+    /// Returns the texture type's name in ASCII.
+    pub fn texture_type_name(self) -> &'static str {
+        unsafe {
+            let value = sys::basis_get_texture_type_name(self.into());
+            CStr::from_ptr(value).to_str().unwrap()
+        }
+    }
+}
+
 #[allow(non_camel_case_types)]
 #[derive(Copy, Clone, Debug, PartialEq)]
 #[repr(i32)]
@@ -23,10 +60,11 @@ impl From<sys::basist_basis_tex_format> for BasisTextureFormat {
 
 impl BasisTextureFormat {
     /// Returns true if the specified format was enabled at compile time.
-    pub fn can_transcode_to_format(self, transcoder_texture_format: TranscoderTextureFormat) -> bool {
-        unsafe {
-            sys::basis_is_format_supported(transcoder_texture_format.into(), self.into())
-        }
+    pub fn can_transcode_to_format(
+        self,
+        transcoder_texture_format: TranscoderTextureFormat,
+    ) -> bool {
+        unsafe { sys::basis_is_format_supported(transcoder_texture_format.into(), self.into()) }
     }
 }
 
@@ -164,7 +202,10 @@ impl TranscoderTextureFormat {
     }
 
     /// Returns true if the specified format was enabled at compile time.
-    pub fn can_transcode_from_format(self, basis_texture_format: BasisTextureFormat) -> bool {
+    pub fn can_transcode_from_format(
+        self,
+        basis_texture_format: BasisTextureFormat,
+    ) -> bool {
         basis_texture_format.can_transcode_to_format(self)
     }
 
@@ -177,7 +218,8 @@ impl TranscoderTextureFormat {
         output_rows_in_pixels: Option<u32>,
     ) -> u32 {
         // Default of 0 is fine for these values
-        let mut output_row_pitch_in_blocks_or_pixels = output_row_pitch_in_blocks_or_pixels.unwrap_or(0);
+        let mut output_row_pitch_in_blocks_or_pixels =
+            output_row_pitch_in_blocks_or_pixels.unwrap_or(0);
         let mut output_rows_in_pixels = output_rows_in_pixels.unwrap_or(0);
 
         // Derived from implementation of basis_validate_output_buffer_size
@@ -213,7 +255,6 @@ impl TranscoderTextureFormat {
         minimum_output_buffer_blocks_or_pixels
     }
 
-
     pub fn calculate_minimum_output_buffer_bytes(
         self,
         original_width: u32,
@@ -248,7 +289,7 @@ impl TranscoderTextureFormat {
                 original_height,
                 output_row_pitch_in_blocks_or_pixels.unwrap_or(0),
                 output_rows_in_pixels.unwrap_or(0),
-                total_slice_blocks
+                total_slice_blocks,
             )
         }
     }
@@ -363,43 +404,6 @@ impl Into<sys::basisu_texture_format> for TextureFormat {
 impl From<sys::basisu_texture_format> for TextureFormat {
     fn from(value: sys::basisu_texture_format) -> Self {
         unsafe { std::mem::transmute(value as i32) }
-    }
-}
-
-#[derive(Copy, Clone, Debug, PartialEq)]
-#[repr(u32)]
-pub enum TextureType {
-    /// An arbitrary array of 2D RGB or RGBA images with optional mipmaps, array size = # images, each image may have a different resolution and # of mipmap levels
-    TextureType2D = sys::basist_basis_texture_type_cBASISTexType2D,
-    /// An array of 2D RGB or RGBA images with optional mipmaps, array size = # images, each image has the same resolution and mipmap levels
-    TextureType2DArray = sys::basist_basis_texture_type_cBASISTexType2DArray,
-    /// an array of cubemap levels, total # of images must be divisable by 6, in X+, X-, Y+, Y-, Z+, Z- order, with optional mipmaps
-    TextureTypeCubemapArray = sys::basist_basis_texture_type_cBASISTexTypeCubemapArray,
-    /// An array of 2D video frames, with optional mipmaps, # frames = # images, each image has the same resolution and # of mipmap levels
-    TextureTypeVideoFrames = sys::basist_basis_texture_type_cBASISTexTypeVideoFrames,
-    /// A 3D texture with optional mipmaps, Z dimension = # images, each image has the same resolution and # of mipmap levels
-    TextureTypeVolume = sys::basist_basis_texture_type_cBASISTexTypeVolume,
-}
-
-impl Into<sys::basist_basis_texture_type> for TextureType {
-    fn into(self) -> sys::basist_basis_texture_type {
-        self as sys::basist_basis_texture_type
-    }
-}
-
-impl From<sys::basist_basis_texture_type> for TextureFormat {
-    fn from(value: sys::basist_basis_texture_type) -> Self {
-        unsafe { std::mem::transmute(value as u32) }
-    }
-}
-
-impl TextureType {
-    /// Returns the texture type's name in ASCII.
-    pub fn texture_type_name(self) -> &'static str {
-        unsafe {
-            let value = sys::basis_get_texture_type_name(self.into());
-            CStr::from_ptr(value).to_str().unwrap()
-        }
     }
 }
 

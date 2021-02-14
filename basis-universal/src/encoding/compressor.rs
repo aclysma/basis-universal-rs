@@ -83,6 +83,18 @@ impl Compressor {
             std::slice::from_raw_parts(result.pData, result.length as usize)
         }
     }
+
+    pub fn basis_file_size(&self) -> u32 {
+        unsafe { sys::compressor_get_basis_file_size(self.0) }
+    }
+
+    pub fn bits_per_texel(&self) -> f64 {
+        unsafe { sys::compressor_get_basis_bits_per_texel(self.0) }
+    }
+
+    pub fn any_source_image_has_alpha(&self) -> bool {
+        unsafe { sys::compressor_get_any_source_image_has_alpha(self.0) }
+    }
 }
 
 impl Default for Compressor {

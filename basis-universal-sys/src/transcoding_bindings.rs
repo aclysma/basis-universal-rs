@@ -685,6 +685,37 @@ extern "C" {
     pub fn transcoder_delete(transcoder: *mut Transcoder);
 }
 extern "C" {
+    pub fn transcoder_validate_file_checksums(
+        transcoder: *const Transcoder,
+        pData: *const ::std::os::raw::c_void,
+        data_size: u32,
+        full_validation: bool,
+    ) -> bool;
+}
+extern "C" {
+    pub fn transcoder_validate_header(
+        transcoder: *const Transcoder,
+        pData: *const ::std::os::raw::c_void,
+        data_size: u32,
+    ) -> bool;
+}
+extern "C" {
+    pub fn transcoder_get_texture_type(
+        transcoder: *const Transcoder,
+        pData: *const ::std::os::raw::c_void,
+        data_size: u32,
+    ) -> basist_basis_texture_type;
+}
+extern "C" {
+    pub fn transcoder_get_userdata(
+        transcoder: *const Transcoder,
+        pData: *const ::std::os::raw::c_void,
+        data_size: u32,
+        userdata0: *mut u32,
+        userdata1: *mut u32,
+    ) -> bool;
+}
+extern "C" {
     pub fn transcoder_get_total_images(
         transcoder: *const Transcoder,
         pData: *const ::std::os::raw::c_void,

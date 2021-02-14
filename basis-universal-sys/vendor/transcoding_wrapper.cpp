@@ -111,16 +111,23 @@ extern "C" {
         delete transcoder;
     }
 
-    // Not yet implemented:
-    //
-    //    // Validates the .basis file. This computes a crc16 over the entire file, so it's slow.
-    //    bool validate_file_checksums(const void *pData, uint32_t data_size, bool full_validation) const;
-    //
-    //    // Quick header validation - no crc16 checks.
-    //    bool validate_header(const void *pData, uint32_t data_size) const;
-    //
-    //    basis_texture_type get_texture_type(const void *pData, uint32_t data_size) const;
-    //    bool get_userdata(const void *pData, uint32_t data_size, uint32_t &userdata0, uint32_t &userdata1) const;
+    // Validates the .basis file. This computes a crc16 over the entire file, so it's slow.
+    bool transcoder_validate_file_checksums(const Transcoder *transcoder, const void *pData, uint32_t data_size, bool full_validation) {
+        return transcoder->pTranscoder->validate_file_checksums(pData, data_size, full_validation);
+    }
+
+    // Quick header validation - no crc16 checks.
+    bool transcoder_validate_header(const Transcoder *transcoder, const void *pData, uint32_t data_size) {
+        return transcoder->pTranscoder->validate_header(pData, data_size);
+    }
+
+    basist::basis_texture_type transcoder_get_texture_type(const Transcoder *transcoder, const void *pData, uint32_t data_size) {
+        return transcoder->pTranscoder->get_texture_type(pData, data_size);
+    }
+
+    bool transcoder_get_userdata(const Transcoder *transcoder, const void *pData, uint32_t data_size, uint32_t &userdata0, uint32_t &userdata1) {
+        return transcoder->pTranscoder->get_userdata(pData, data_size, userdata0, userdata1);
+    }
 
     // Returns the total number of images in the basis file (always 1 or more).
     // Note that the number of mipmap levels for each image may differ, and that images may have different resolutions.
@@ -136,8 +143,6 @@ extern "C" {
     uint32_t transcoder_get_total_image_levels(const Transcoder *transcoder, const void *pData, uint32_t data_size, uint32_t image_index) {
         return transcoder->pTranscoder->get_total_image_levels(pData, data_size, image_index);
     }
-
-
 
     // Returns basic information about an image. Note that orig_width/orig_height may not be a multiple of 4.
     bool transcoder_get_image_level_desc(const Transcoder *transcoder, const void *pData, uint32_t data_size, uint32_t image_index, uint32_t level_index, uint32_t &orig_width, uint32_t &orig_height, uint32_t &total_blocks) {
@@ -174,9 +179,6 @@ extern "C" {
         return transcoder->pTranscoder->get_ready_to_transcode();
     }
 
-    // Not yet implemented:
-    //
-    //
     // transcode_image_level() decodes a single mipmap level from the .basis file to any of the supported output texture formats.
     // It'll first find the slice(s) to transcode, then call transcode_slice() one or two times to decode both the color and alpha texture data (or RG texture data from two slices for BC5).
     // If the .basis file doesn't have alpha slices, the output alpha blocks will be set to fully opaque (all 255's).

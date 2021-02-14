@@ -1,4 +1,5 @@
 use super::*;
+use crate::UserData;
 use basis_universal_sys as sys;
 pub use basis_universal_sys::ColorU8;
 
@@ -114,6 +115,15 @@ impl CompressorParams {
     ) {
         unsafe {
             sys::compressor_params_set_generate_mipmaps(self.0, generate_mipmaps);
+        }
+    }
+
+    pub fn set_userdata(
+        &mut self,
+        userdata: UserData,
+    ) {
+        unsafe {
+            sys::compressor_params_set_userdata(self.0, userdata.userdata0, userdata.userdata1);
         }
     }
 

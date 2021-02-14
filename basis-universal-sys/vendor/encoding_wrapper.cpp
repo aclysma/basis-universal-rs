@@ -95,34 +95,22 @@ extern "C" {
     // basisu::basis_compressor_params
     //
     struct CompressorParams {
-        //basist::etc1_global_selector_codebook *pCodebook;
-        //basisu::job_pool pJobPool;
-
-        // 1 = don't make any additional threads. This must be >= 1
-        //uint32_t job_pool_thread_count;
         basisu::basis_compressor_params *pParams;
     };
 
     CompressorParams *compressor_params_new() {
         CompressorParams *params = new CompressorParams;
         params->pParams = new basisu::basis_compressor_params();
-        //params->pCodebook = new basist::etc1_global_selector_codebook(basist::g_global_selector_cb_size, basist::g_global_selector_cb);
-        //params->pJobPool = new basisu::job_pool();
-        //params->pParams->m_pJob_pool = params->pJobPool;
-        //params->job_pool_thread_count = 1;
         return params;
     };
 
     void compressor_params_delete(CompressorParams *params) {
         delete params->pParams;
-        //delete params->pCodebook;
-        //delete params->pJobPool;
         delete params;
     }
 
     void compressor_params_clear(CompressorParams *params) {
         params->pParams->clear();
-        //params->job_pool_thread_count = 1;
     }
 
     //
@@ -169,6 +157,11 @@ extern "C" {
 
     void compressor_params_set_generate_mipmaps(CompressorParams *params, bool generate_mipmaps) {
         params->pParams->m_mip_gen = generate_mipmaps;
+    }
+
+    void compressor_params_set_userdata(CompressorParams *params, uint32_t userdata0, uint32_t userdata1) {
+        params->pParams->m_userdata0 = userdata0;
+        params->pParams->m_userdata1 = userdata1;
     }
 
     // compressor_params_set_multithreaded is not implemented because this parameter is controlled by thread count
@@ -227,11 +220,20 @@ extern "C" {
         return file;
     }
 
-    // Not implemented yet:
+    // Not implemented:
     //    const std::vector<image_stats> &compressor_get_stats();
-    //    uint32_t compressor_get_basis_file_size();
-    //    double compressor_get_basis_bits_per_texel();
-    //    bool compressor_get_any_source_image_has_alpha();
+
+    uint32_t compressor_get_basis_file_size(const Compressor *compressor) {
+        return compressor->pCompressor->get_basis_file_size();
+    }
+
+    double compressor_get_basis_bits_per_texel(const Compressor *compressor) {
+        return compressor->pCompressor->get_basis_bits_per_texel();
+    }
+
+    bool compressor_get_any_source_image_has_alpha(const Compressor *compressor) {
+        return compressor->pCompressor->get_any_source_image_has_alpha();
+    }
 
     void basisu_encoder_init() {
         basisu::basisu_encoder_init();

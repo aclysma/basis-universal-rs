@@ -15,6 +15,12 @@ bindgen vendor/transcoding_wrapper.cpp -o src/transcoding_bindings.rs \
   \
   --whitelist-function transcoder_new \
   --whitelist-function transcoder_delete \
+  \
+  --whitelist-function transcoder_validate_file_checksums \
+  --whitelist-function transcoder_validate_header \
+  --whitelist-function transcoder_get_texture_type \
+  --whitelist-function transcoder_get_userdata \
+  \
   --whitelist-function transcoder_get_total_images \
   --whitelist-function transcoder_get_tex_format \
   --whitelist-function transcoder_get_total_image_levels \
@@ -65,12 +71,17 @@ bindgen vendor/encoding_wrapper.cpp -o src/encoding_bindings.rs \
   --whitelist-function compressor_params_set_auto_global_sel_pal \
   --whitelist-function compressor_params_set_uastc \
   --whitelist-function compressor_params_set_generate_mipmaps \
+  --whitelist-function compressor_params_set_userdata \
   \
   --whitelist-function compressor_new \
   --whitelist-function compressor_delete \
   --whitelist-function compressor_init \
   --whitelist-function compressor_process \
   --whitelist-function compressor_get_output_basis_file \
+  \
+  --whitelist-function compressor_get_basis_file_size \
+  --whitelist-function compressor_get_basis_bits_per_texel \
+  --whitelist-function compressor_get_any_source_image_has_alpha \
   \
   --whitelist-function basisu_encoder_init \
   \

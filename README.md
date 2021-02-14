@@ -27,22 +27,20 @@ at your option.
 Some dependencies may be licensed under other terms. These licenses include "ISC", "CC0-1.0", "BSD-2-Clause",
 "BSD-3-Clause", and "Zlib". This is validated on a best-effort basis in every CI run using cargo-deny.
 
-Binomial LLC's `basis-universal` Supercompressed GPU Texture Codec is licensed under Apache License 2.0.
+Binomial LLC's `basis-universal` Supercompressed GPU Texture Codec is licensed under Apache License 2.0:
 
-```
-Copyright (C) 2019-2020 Binomial LLC. All Rights Reserved.
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+> Copyright (C) 2019-2020 Binomial LLC. All Rights Reserved.
+> Licensed under the Apache License, Version 2.0 (the "License");
+> you may not use this file except in compliance with the License.
+> You may obtain a copy of the License at
+> 
+> http://www.apache.org/licenses/LICENSE-2.0
+> 
+> Unless required by applicable law or agreed to in writing, software
+> distributed under the License is distributed on an "AS IS" BASIS,
+> WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+> See the License for the specific language governing permissions and
+> limitations under the License.
 
 ## Contribution
 
