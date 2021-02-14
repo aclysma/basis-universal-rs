@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "basis-universal",
+    "basis-universal-sys"
+]
+
