@@ -20,6 +20,9 @@ pub type ImageInfo = sys::basist_basisu_image_info;
 /// Info for a mip level of a single image within basis data
 pub type ImageLevelInfo = sys::basist_basisu_image_level_info;
 
+/// Info for the complete basis file
+pub type FileInfo = sys::FileInfo;
+
 /// Extra parameters for transcoding an image
 #[derive(Default)]
 pub struct TranscodeParameters {
@@ -206,9 +209,25 @@ impl Transcoder {
         }
     }
 
-    // Not implemented
-    //    // Get a description of the basis file and low-level information about each slice.
-    //    bool get_file_info(const void *pData, uint32_t data_size, basisu_file_info &file_info) const;
+    /// Get a description of the basis file and low-level information about each slice.
+    pub fn file_info(
+        &self,
+        data: &[u8],
+    ) -> Option<FileInfo> {
+        let mut file_info = unsafe { std::mem::zeroed::<FileInfo>() };
+        unsafe {
+            if sys::transcoder_get_file_info(
+                self.0,
+                data.as_ptr() as _,
+                data.len() as u32,
+                &mut file_info,
+            ) {
+                Some(file_info)
+            } else {
+                None
+            }
+        }
+    }
 
     /// prepare_transcoding() must be called before calling transcode_slice() or transcode_image_level().
     /// This is `start_transcoding` in the original library

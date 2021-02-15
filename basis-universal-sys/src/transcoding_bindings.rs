@@ -604,6 +604,251 @@ fn bindgen_test_layout_basist_basisu_image_level_info() {
         )
     );
 }
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct FileInfo {
+    pub m_version: u32,
+    pub m_total_header_size: u32,
+    pub m_total_selectors: u32,
+    pub m_selector_codebook_ofs: u32,
+    pub m_selector_codebook_size: u32,
+    pub m_total_endpoints: u32,
+    pub m_endpoint_codebook_ofs: u32,
+    pub m_endpoint_codebook_size: u32,
+    pub m_tables_ofs: u32,
+    pub m_tables_size: u32,
+    pub m_slices_size: u32,
+    pub m_tex_type: basist_basis_texture_type,
+    pub m_us_per_frame: u32,
+    pub m_total_images: u32,
+    pub m_userdata0: u32,
+    pub m_userdata1: u32,
+    pub m_tex_format: basist_basis_tex_format,
+    pub m_y_flipped: bool,
+    pub m_etc1s: bool,
+    pub m_has_alpha_slices: bool,
+}
+#[test]
+fn bindgen_test_layout_FileInfo() {
+    assert_eq!(
+        ::std::mem::size_of::<FileInfo>(),
+        72usize,
+        concat!("Size of: ", stringify!(FileInfo))
+    );
+    assert_eq!(
+        ::std::mem::align_of::<FileInfo>(),
+        4usize,
+        concat!("Alignment of ", stringify!(FileInfo))
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_version as *const _ as usize },
+        0usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_version)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_total_header_size as *const _ as usize },
+        4usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_total_header_size)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_total_selectors as *const _ as usize },
+        8usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_total_selectors)
+        )
+    );
+    assert_eq!(
+        unsafe {
+            &(*(::std::ptr::null::<FileInfo>())).m_selector_codebook_ofs as *const _ as usize
+        },
+        12usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_selector_codebook_ofs)
+        )
+    );
+    assert_eq!(
+        unsafe {
+            &(*(::std::ptr::null::<FileInfo>())).m_selector_codebook_size as *const _ as usize
+        },
+        16usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_selector_codebook_size)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_total_endpoints as *const _ as usize },
+        20usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_total_endpoints)
+        )
+    );
+    assert_eq!(
+        unsafe {
+            &(*(::std::ptr::null::<FileInfo>())).m_endpoint_codebook_ofs as *const _ as usize
+        },
+        24usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_endpoint_codebook_ofs)
+        )
+    );
+    assert_eq!(
+        unsafe {
+            &(*(::std::ptr::null::<FileInfo>())).m_endpoint_codebook_size as *const _ as usize
+        },
+        28usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_endpoint_codebook_size)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_tables_ofs as *const _ as usize },
+        32usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_tables_ofs)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_tables_size as *const _ as usize },
+        36usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_tables_size)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_slices_size as *const _ as usize },
+        40usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_slices_size)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_tex_type as *const _ as usize },
+        44usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_tex_type)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_us_per_frame as *const _ as usize },
+        48usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_us_per_frame)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_total_images as *const _ as usize },
+        52usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_total_images)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_userdata0 as *const _ as usize },
+        56usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_userdata0)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_userdata1 as *const _ as usize },
+        60usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_userdata1)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_tex_format as *const _ as usize },
+        64usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_tex_format)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_y_flipped as *const _ as usize },
+        68usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_y_flipped)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_etc1s as *const _ as usize },
+        69usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_etc1s)
+        )
+    );
+    assert_eq!(
+        unsafe { &(*(::std::ptr::null::<FileInfo>())).m_has_alpha_slices as *const _ as usize },
+        70usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(FileInfo),
+            "::",
+            stringify!(m_has_alpha_slices)
+        )
+    );
+}
 extern "C" {
     pub fn basis_get_bytes_per_block_or_pixel(fmt: basist_transcoder_texture_format) -> u32;
 }
@@ -766,6 +1011,14 @@ extern "C" {
         level_info: *mut basist_basisu_image_level_info,
         image_index: u32,
         level_index: u32,
+    ) -> bool;
+}
+extern "C" {
+    pub fn transcoder_get_file_info(
+        transcoder: *mut Transcoder,
+        pData: *const ::std::os::raw::c_void,
+        data_size: u32,
+        file_info: *mut FileInfo,
     ) -> bool;
 }
 extern "C" {

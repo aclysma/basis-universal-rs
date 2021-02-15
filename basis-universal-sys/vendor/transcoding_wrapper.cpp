@@ -1,6 +1,76 @@
 #include "basis_universal/transcoder/basisu_transcoder.h"
 
 extern "C" {
+    // A copy of basist::basisu_file_info with problematic fields removed
+    struct FileInfo
+    {
+        void reset(basist::basisu_file_info file_info) {
+            m_version = file_info.m_version;
+            m_total_header_size = file_info.m_total_header_size;
+
+            m_total_selectors = file_info.m_total_selectors;
+            m_selector_codebook_ofs = file_info.m_selector_codebook_ofs;
+            m_selector_codebook_size = file_info.m_selector_codebook_size;
+
+            m_total_endpoints = file_info.m_total_endpoints;
+            m_endpoint_codebook_ofs = file_info.m_endpoint_codebook_ofs;
+            m_endpoint_codebook_size = file_info.m_endpoint_codebook_size;
+
+            m_tables_ofs = file_info.m_tables_ofs;
+            m_tables_size = file_info.m_tables_size;
+
+            m_slices_size = file_info.m_slices_size;
+
+            m_tex_type = file_info.m_tex_type;
+            m_us_per_frame = file_info.m_us_per_frame;
+
+            m_total_images = file_info.m_total_images;
+
+            m_userdata0 = file_info.m_userdata0;
+            m_userdata1 = file_info.m_userdata1;
+
+            m_tex_format = file_info.m_tex_format;
+
+            m_y_flipped = file_info.m_y_flipped;
+            m_etc1s = file_info.m_etc1s;
+            m_has_alpha_slices = file_info.m_has_alpha_slices;
+        }
+
+        uint32_t m_version;
+        uint32_t m_total_header_size;
+
+        uint32_t m_total_selectors;
+        uint32_t m_selector_codebook_ofs;
+        uint32_t m_selector_codebook_size;
+
+        uint32_t m_total_endpoints;
+        uint32_t m_endpoint_codebook_ofs;
+        uint32_t m_endpoint_codebook_size;
+
+        uint32_t m_tables_ofs;
+        uint32_t m_tables_size;
+
+        uint32_t m_slices_size;
+
+        basist::basis_texture_type m_tex_type;
+        uint32_t m_us_per_frame;
+
+        // Low-level slice information (1 slice per image for color-only basis files, 2 for alpha basis files)
+        //basist::basisu_slice_info_vec m_slice_info;
+
+        uint32_t m_total_images;	 // total # of images
+        //std::vector<uint32_t> m_image_mipmap_levels; // the # of mipmap levels for each image
+
+        uint32_t m_userdata0;
+        uint32_t m_userdata1;
+
+        basist::basis_tex_format m_tex_format; // ETC1S, UASTC, etc.
+
+        bool m_y_flipped;				// true if the image was Y flipped
+        bool m_etc1s;					// true if the file is ETC1S
+        bool m_has_alpha_slices;	// true if the texture has alpha slices (for ETC1S: even slices RGB, odd slices alpha)
+    };
+
     //
     // "Loose" global functions
     //
@@ -159,10 +229,16 @@ extern "C" {
         return transcoder->pTranscoder->get_image_level_info(pData, data_size, level_info, image_index, level_index);
     }
 
-    // Not yet implemented:
-    //
-    //    // Get a description of the basis file and low-level information about each slice.
-    //    bool get_file_info(const void *pData, uint32_t data_size, basisu_file_info &file_info) const;
+    // Get a description of the basis file and low-level information about each slice.
+    bool transcoder_get_file_info(Transcoder *transcoder, const void *pData, uint32_t data_size, FileInfo &file_info) {
+        basist::basisu_file_info fi;
+        if (!transcoder->pTranscoder->get_file_info(pData, data_size, fi)) {
+            return false;
+        }
+
+        file_info.reset(fi);
+        return true;
+    }
 
     // start_transcoding() must be called before calling transcode_slice() or transcode_image_level().
     // For ETC1S files, this call decompresses the selector/endpoint codebooks, so ideally you would only call this once per .basis file (not each image/mipmap level).

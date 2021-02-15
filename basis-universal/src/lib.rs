@@ -12,8 +12,8 @@ pub struct UserData {
     pub userdata1: u32,
 }
 
-const QUALITY_DEFAULT : u32 = sys::basisu_BASISU_DEFAULT_QUALITY as u32;
-const QUALITY_MIN : u32 = sys::basisu_BASISU_QUALITY_MIN as u32;
-const QUALITY_MAX : u32 = sys::basisu_BASISU_QUALITY_MAX as u32;
-const TEXTURE_DIMENSION_MAX : u32 = sys::basisu_BASISU_MAX_SUPPORTED_TEXTURE_DIMENSION as u32;
-const IMAGE_DIMENSION_MAX : u32 = sys::basisu_BASISU_MAX_IMAGE_DIMENSION as u32;
+pub const QUALITY_DEFAULT: u32 = sys::basisu_BASISU_DEFAULT_QUALITY as u32;
+pub const QUALITY_MIN: u32 = sys::basisu_BASISU_QUALITY_MIN as u32;
+pub const QUALITY_MAX: u32 = sys::basisu_BASISU_QUALITY_MAX as u32;
+pub const TEXTURE_DIMENSION_MAX: u32 = sys::basisu_BASISU_MAX_SUPPORTED_TEXTURE_DIMENSION as u32;
+pub const IMAGE_DIMENSION_MAX: u32 = sys::basisu_BASISU_MAX_IMAGE_DIMENSION as u32;

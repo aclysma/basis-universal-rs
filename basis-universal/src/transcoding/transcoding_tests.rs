@@ -55,6 +55,40 @@ fn test_transcoder_get_total_images() {
 }
 
 #[test]
+fn test_transcoder_info() {
+    let basis_file = include_bytes!("../../test_assets/rust-logo-etc.basis");
+    let transcoder = Transcoder::new();
+
+    let file_info = transcoder.file_info(basis_file).unwrap();
+
+    // These should all return valid results
+    assert!(transcoder.image_info(basis_file, 0).is_some());
+    assert!(transcoder
+        .image_level_description(basis_file, 0, 0)
+        .is_some());
+    assert!(transcoder.image_level_info(basis_file, 0, 0).is_some());
+
+    // These return invalid results because we are passing image index > image count
+    assert!(transcoder
+        .image_info(basis_file, file_info.m_total_images + 1)
+        .is_none());
+    assert!(transcoder
+        .image_level_description(basis_file, file_info.m_total_images + 1, 0)
+        .is_none());
+    assert!(transcoder
+        .image_level_info(basis_file, file_info.m_total_images + 1, 0)
+        .is_none());
+
+    // These return invalid results because we are passing level index > level count
+    assert!(transcoder
+        .image_level_description(basis_file, 0, 100)
+        .is_none());
+    assert!(transcoder.image_level_info(basis_file, 0, 100).is_none());
+
+    std::mem::drop(transcoder);
+}
+
+#[test]
 fn test_transcoder_get_tex_format() {
     let basis_file = include_bytes!("../../test_assets/rust-logo-etc.basis");
     let transcoder = Transcoder::new();

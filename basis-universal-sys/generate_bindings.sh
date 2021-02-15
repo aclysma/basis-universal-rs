@@ -28,6 +28,7 @@ bindgen vendor/transcoding_wrapper.cpp -o src/transcoding_bindings.rs \
   --whitelist-function transcoder_get_image_level_desc \
   --whitelist-function transcoder_get_image_info \
   --whitelist-function transcoder_get_image_level_info \
+  --whitelist-function transcoder_get_file_info \
   \
   --whitelist-function transcoder_start_transcoding \
   --whitelist-function transcoder_stop_transcoding \
