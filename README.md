@@ -17,6 +17,11 @@ library also supports generating mipmaps for you.
 
 Please refer to https://github.com/BinomialLLC/basis_universal for more details.
 
+## Status
+
+These bindings should be pretty close to production ready. However, I want to take a few weeks to road test it with my
+rendering framework before releasing 0.1.0. This crate will not follow semver until 0.1.0 has been published.
+
 ## Performance
 
 The C++ code that is wrapped by these bindings is built at the same optimization level used for building the 
