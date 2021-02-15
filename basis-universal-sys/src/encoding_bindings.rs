@@ -21,6 +21,7 @@ fn bindgen_test_layout_basisu_image() {
         concat!("Alignment of ", stringify!(basisu_image))
     );
 }
+pub const basisu_TOTAL_PACK_UASTC_LEVELS: u32 = 5;
 pub const basisu_BASISU_MAX_SUPPORTED_TEXTURE_DIMENSION: u32 = 16384;
 pub const basisu_BASISU_DEFAULT_ENDPOINT_RDO_THRESH: f32 = 1.5;
 pub const basisu_BASISU_DEFAULT_SELECTOR_RDO_THRESH: f32 = 1.25;
@@ -167,6 +168,18 @@ fn bindgen_test_layout_ColorU8() {
         )
     );
 }
+pub const UastcPackFlags_PackUASTCLevelFastest: UastcPackFlags = 0;
+pub const UastcPackFlags_PackUASTCLevelFaster: UastcPackFlags = 1;
+pub const UastcPackFlags_PackUASTCLevelDefault: UastcPackFlags = 2;
+pub const UastcPackFlags_PackUASTCLevelSlower: UastcPackFlags = 3;
+pub const UastcPackFlags_PackUASTCLevelVerySlow: UastcPackFlags = 4;
+pub const UastcPackFlags_PackUASTCLevelMask: UastcPackFlags = 15;
+pub const UastcPackFlags_PackUASTCFavorUASTCError: UastcPackFlags = 8;
+pub const UastcPackFlags_PackUASTCFavorBC7Error: UastcPackFlags = 16;
+pub const UastcPackFlags_PackUASTCETC1FasterHints: UastcPackFlags = 64;
+pub const UastcPackFlags_PackUASTCETC1FastestHints: UastcPackFlags = 128;
+pub const UastcPackFlags_PackUASTCETC1DisableFlipAndIndividual: UastcPackFlags = 256;
+pub type UastcPackFlags = ::std::os::raw::c_uint;
 extern "C" {
     pub fn image_clear(image: *mut basisu_image);
 }
@@ -338,6 +351,15 @@ extern "C" {
     );
 }
 extern "C" {
+    pub fn compressor_params_get_pack_uastc_flags(params: *mut CompressorParams) -> UastcPackFlags;
+}
+extern "C" {
+    pub fn compressor_params_set_pack_uastc_flags(
+        params: *mut CompressorParams,
+        pack_uastc_flags: UastcPackFlags,
+    );
+}
+extern "C" {
     pub fn compressor_params_set_global_sel_pal(
         params: *mut CompressorParams,
         global_sel_pal: bool,
@@ -356,9 +378,39 @@ extern "C" {
     );
 }
 extern "C" {
+    pub fn compressor_params_set_perceptual(
+        params: *mut CompressorParams,
+        perceptual: bool,
+    );
+}
+extern "C" {
+    pub fn compressor_params_set_mip_srgb(
+        params: *mut CompressorParams,
+        mip_srgb: bool,
+    );
+}
+extern "C" {
+    pub fn compressor_params_set_no_selector_rdo(
+        params: *mut CompressorParams,
+        no_selector_rdo: bool,
+    );
+}
+extern "C" {
+    pub fn compressor_params_set_no_endpoint_rdo(
+        params: *mut CompressorParams,
+        no_endpoint_rdo: bool,
+    );
+}
+extern "C" {
     pub fn compressor_params_set_generate_mipmaps(
         params: *mut CompressorParams,
         generate_mipmaps: bool,
+    );
+}
+extern "C" {
+    pub fn compressor_params_set_mip_smallest_dimension(
+        params: *mut CompressorParams,
+        mip_smallest_dimension: ::std::os::raw::c_int,
     );
 }
 extern "C" {

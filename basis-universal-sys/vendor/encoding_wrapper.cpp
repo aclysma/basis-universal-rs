@@ -16,6 +16,21 @@ extern "C" {
         uint32_t combined;
     };
 
+    // These are in an anonymous enum, so wrap them
+    enum UastcPackFlags {
+        PackUASTCLevelFastest = basisu::cPackUASTCLevelFastest,
+        PackUASTCLevelFaster = basisu::cPackUASTCLevelFaster,
+        PackUASTCLevelDefault = basisu::cPackUASTCLevelDefault,
+        PackUASTCLevelSlower = basisu::cPackUASTCLevelSlower,
+        PackUASTCLevelVerySlow = basisu::cPackUASTCLevelVerySlow,
+        PackUASTCLevelMask = basisu::cPackUASTCLevelMask,
+        PackUASTCFavorUASTCError = basisu::cPackUASTCFavorUASTCError,
+        PackUASTCFavorBC7Error = basisu::cPackUASTCFavorBC7Error,
+        PackUASTCETC1FasterHints = basisu::cPackUASTCETC1FasterHints,
+        PackUASTCETC1FastestHints = basisu::cPackUASTCETC1FastestHints,
+        PackUASTCETC1DisableFlipAndIndividual = basisu::cPackUASTCETC1DisableFlipAndIndividual,
+    };
+
     void image_clear(basisu::image *image) {
         image->clear();
     }
@@ -139,8 +154,17 @@ extern "C" {
         params->pParams->m_status_output = status_output;
     }
 
+    // According to CLI --help, this only affects ETC1S
     void compressor_params_set_quality_level(CompressorParams *params, int quality_level) {
         params->pParams->m_quality_level = quality_level;
+    }
+
+    UastcPackFlags compressor_params_get_pack_uastc_flags(CompressorParams *params) {
+        return static_cast<UastcPackFlags>(params->pParams->m_pack_uastc_flags);
+    }
+
+    void compressor_params_set_pack_uastc_flags(CompressorParams *params, UastcPackFlags pack_uastc_flags) {
+        params->pParams->m_pack_uastc_flags = static_cast<uint32_t>(pack_uastc_flags);
     }
 
     void compressor_params_set_global_sel_pal(CompressorParams *params, bool global_sel_pal) {
@@ -155,8 +179,28 @@ extern "C" {
         params->pParams->m_uastc = is_uastc;
     }
 
+    void compressor_params_set_perceptual(CompressorParams *params, bool perceptual) {
+        params->pParams->m_perceptual = perceptual;
+    }
+
+    void compressor_params_set_mip_srgb(CompressorParams *params, bool mip_srgb) {
+        params->pParams->m_mip_srgb = mip_srgb;
+    }
+
+    void compressor_params_set_no_selector_rdo(CompressorParams *params, bool no_selector_rdo) {
+        params->pParams->m_no_selector_rdo = no_selector_rdo;
+    }
+
+    void compressor_params_set_no_endpoint_rdo(CompressorParams *params, bool no_endpoint_rdo) {
+        params->pParams->m_no_endpoint_rdo = no_endpoint_rdo;
+    }
+
     void compressor_params_set_generate_mipmaps(CompressorParams *params, bool generate_mipmaps) {
         params->pParams->m_mip_gen = generate_mipmaps;
+    }
+
+    void compressor_params_set_mip_smallest_dimension(CompressorParams *params, int mip_smallest_dimension) {
+        params->pParams->m_mip_smallest_dimension = mip_smallest_dimension;
     }
 
     void compressor_params_set_userdata(CompressorParams *params, uint32_t userdata0, uint32_t userdata1) {

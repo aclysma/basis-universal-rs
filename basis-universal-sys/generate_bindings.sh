@@ -68,10 +68,17 @@ bindgen vendor/encoding_wrapper.cpp -o src/encoding_bindings.rs \
   \
   --whitelist-function compressor_params_set_status_output \
   --whitelist-function compressor_params_set_quality_level \
+  --whitelist-function compressor_params_get_pack_uastc_flags \
+  --whitelist-function compressor_params_set_pack_uastc_flags \
   --whitelist-function compressor_params_set_global_sel_pal \
   --whitelist-function compressor_params_set_auto_global_sel_pal \
   --whitelist-function compressor_params_set_uastc \
+  --whitelist-function compressor_params_set_perceptual \
+  --whitelist-function compressor_params_set_mip_srgb \
+  --whitelist-function compressor_params_set_no_selector_rdo \
+  --whitelist-function compressor_params_set_no_endpoint_rdo \
   --whitelist-function compressor_params_set_generate_mipmaps \
+  --whitelist-function compressor_params_set_mip_smallest_dimension \
   --whitelist-function compressor_params_set_userdata \
   \
   --whitelist-function compressor_new \
@@ -100,6 +107,7 @@ bindgen vendor/encoding_wrapper.cpp -o src/encoding_bindings.rs \
   --whitelist-var basisu::BASISU_RDO_UASTC_DICT_SIZE_DEFAULT \
   --whitelist-var basisu::BASISU_RDO_UASTC_DICT_SIZE_MIN \
   --whitelist-var basisu::BASISU_RDO_UASTC_DICT_SIZE_MAX \
+  --whitelist-var basisu::TOTAL_PACK_UASTC_LEVELS \
   \
   --opaque-type CompressorParams \
   --opaque-type Compressor \

@@ -2,6 +2,7 @@ use super::*;
 use basis_universal_sys as sys;
 pub use basis_universal_sys::ColorU8;
 
+/// Error codes that can be returned when encoding basis-universal data with a [Compressor]
 #[allow(non_camel_case_types)]
 #[derive(Copy, Clone, Debug, PartialEq)]
 #[repr(u32)]
@@ -31,7 +32,10 @@ impl From<sys::basisu_basis_compressor_error_code> for CompressorErrorCode {
     }
 }
 
+/// Used to encode raw image data to basis-universal form
 pub struct Compressor(pub *mut sys::Compressor);
+
+unsafe impl Send for Compressor {}
 
 impl Compressor {
     /// total_thread_count is passed directly to basisu::job_pool
@@ -84,14 +88,17 @@ impl Compressor {
         }
     }
 
+    /// Return the size of the encoded basis-universal data
     pub fn basis_file_size(&self) -> u32 {
         unsafe { sys::compressor_get_basis_file_size(self.0) }
     }
 
+    /// Returns the number of bits required per texel
     pub fn bits_per_texel(&self) -> f64 {
         unsafe { sys::compressor_get_basis_bits_per_texel(self.0) }
     }
 
+    /// Returns if any source image has alpha
     pub fn any_source_image_has_alpha(&self) -> bool {
         unsafe { sys::compressor_get_any_source_image_has_alpha(self.0) }
     }

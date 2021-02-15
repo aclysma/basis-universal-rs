@@ -24,12 +24,17 @@ pub type ImageLevelInfo = sys::basist_basisu_image_level_info;
 pub type FileInfo = sys::FileInfo;
 
 /// Extra parameters for transcoding an image
-#[derive(Default)]
+#[derive(Default, Debug, Clone)]
 pub struct TranscodeParameters {
+    /// The image to transcode
     pub image_index: u32,
+    /// The mip level of the image to transcode
     pub level_index: u32,
+    /// Optional flags can affect transcoding in various ways
     pub decode_flags: Option<DecodeFlags>,
+    /// Optional override for row pitch
     pub output_row_pitch_in_blocks_or_pixels: Option<u32>,
+    /// Optional override for number of rows to transcode
     pub output_rows_in_pixels: Option<u32>,
 }
 

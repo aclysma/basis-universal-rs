@@ -11,6 +11,10 @@ Texture Codec
 
 Encoding can be done ahead of time using a command line tool in the [upstream repository](https://github.com/BinomialLLC/basis_universal).
 
+The encoded data can either be stored as a file or a binary blob. This data can include multiple images, and each image 
+can store multiple levels. This is commonly used for storing cube textures and textures with precomputed mipmaps. This
+library also supports generating mipmaps for you.
+
 Please refer to https://github.com/BinomialLLC/basis_universal for more details.
 
 ## Performance

@@ -55,7 +55,7 @@ pub fn main() {
     let mut compressor_params = CompressorParams::new();
     compressor_params.set_generate_mipmaps(true);
     compressor_params.set_basis_format(BasisTextureFormat::UASTC4x4);
-    compressor_params.set_quality_level(Some(128));
+    compressor_params.set_uastc_quality_level(basis_universal::UASTC_QUALITY_DEFAULT);
     compressor_params.set_print_status_to_stdout(false);
     let userdata = UserData {
         userdata0: 100,

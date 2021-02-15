@@ -1,5 +1,5 @@
 use basis_universal_sys as sys;
-pub use basis_universal_sys::ColorU8;
+
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Mutex;
 
@@ -11,6 +11,9 @@ pub use compressor_params::*;
 
 mod compressor;
 pub use compressor::*;
+
+/// A single uncompressed pixel value
+pub use basis_universal_sys::ColorU8;
 
 #[cfg(test)]
 mod encoding_tests;

@@ -1,6 +1,7 @@
 use basis_universal_sys as sys;
 use std::ffi::CStr;
 
+/// The type of data stored
 #[derive(Copy, Clone, Debug, PartialEq)]
 #[repr(u32)]
 pub enum BasisTextureType {
@@ -38,11 +39,19 @@ impl BasisTextureType {
     }
 }
 
+/// The compression mode/format to use
 #[allow(non_camel_case_types)]
 #[derive(Copy, Clone, Debug, PartialEq)]
 #[repr(i32)]
 pub enum BasisTextureFormat {
+    /// A lower quality mode which is based off a subset of ETC1 called "ETC1S". Includes built-in
+    /// data compression
     ETC1S = sys::basist_basis_tex_format_cETC1S,
+
+    /// Enable UASTC compression mode instead of the default ETC1S mode. Significantly higher
+    /// texture quality, but larger files. UASTC supports an optional Rate Distortion Optimization
+    /// (RDO) post-process stage that conditions the encoded UASTC texture data in the .basis file
+    /// so it can be more effectively LZ compressed by the end user.
     UASTC4x4 = sys::basist_basis_tex_format_cUASTC4x4,
 }
 
@@ -68,6 +77,7 @@ impl BasisTextureFormat {
     }
 }
 
+/// The texture format to transcode basis-universal data into
 #[allow(non_camel_case_types)]
 #[derive(Copy, Clone, Debug, PartialEq)]
 #[repr(i32)]
@@ -176,11 +186,6 @@ impl TranscoderTextureFormat {
         unsafe { sys::basis_transcoder_format_has_alpha(self.into()) }
     }
 
-    /// Returns the basisu::texture_format corresponding to the specified transcoder_texture_format.
-    pub fn texture_format(self) -> TextureFormat {
-        unsafe { sys::basis_get_basisu_texture_format(self.into()).into() }
-    }
-
     /// Returns true if the transcoder texture type is an uncompressed (raw pixel) format.
     pub fn is_compressed(self) -> bool {
         unsafe { !sys::basis_transcoder_format_is_uncompressed(self.into()) }
@@ -209,6 +214,8 @@ impl TranscoderTextureFormat {
         basis_texture_format.can_transcode_to_format(self)
     }
 
+    /// Calculate the minimum output buffer required to store transcoded data in blocks for
+    /// compressed formats and pixels for uncompressed formats
     pub fn calculate_minimum_output_buffer_blocks_or_pixels(
         self,
         original_width: u32,
@@ -255,6 +262,7 @@ impl TranscoderTextureFormat {
         minimum_output_buffer_blocks_or_pixels
     }
 
+    /// Calculate the minimum output buffer required to store transcoded data in bytes
     pub fn calculate_minimum_output_buffer_bytes(
         self,
         original_width: u32,
@@ -272,6 +280,7 @@ impl TranscoderTextureFormat {
         ) * self.bytes_per_block_or_pixel()
     }
 
+    /// Verify that the buffer size is large enough for the transcoded data
     pub fn validate_output_buffer_size(
         self,
         output_blocks_buf_size_in_blocks_or_pixels: u32,
@@ -295,119 +304,8 @@ impl TranscoderTextureFormat {
     }
 }
 
-#[allow(non_camel_case_types)]
-#[derive(Copy, Clone, Debug, PartialEq)]
-#[repr(i32)]
-pub enum TranscoderBlockFormat {
-    ETC1 = sys::basist_block_format_cETC1,           // ETC1S RGB
-    ETC2_RGBA = sys::basist_block_format_cETC2_RGBA, // full ETC2 EAC RGBA8 block
-    BC1 = sys::basist_block_format_cBC1,             // DXT1 RGB
-    BC3 = sys::basist_block_format_cBC3,             // BC4 block followed by a four color BC1 block
-    BC4 = sys::basist_block_format_cBC4,             // DXT5A (alpha block only)
-    BC5 = sys::basist_block_format_cBC5,             // two BC4 blocks
-    PVRTC1_4_RGB = sys::basist_block_format_cPVRTC1_4_RGB, // opaque-only PVRTC1 4bpp
-    PVRTC1_4_RGBA = sys::basist_block_format_cPVRTC1_4_RGBA, // PVRTC1 4bpp RGBA
-    BC7 = sys::basist_block_format_cBC7,             // Full BC7 block, any mode
-    BC7_M5_COLOR = sys::basist_block_format_cBC7_M5_COLOR, // RGB BC7 mode 5 color (writes an opaque mode 5 block)
-    BC7_M5_ALPHA = sys::basist_block_format_cBC7_M5_ALPHA, // alpha portion of BC7 mode 5 (cBC7_M5_COLOR output data must have been written to the output buffer first to set the mode/rot fields etc.)
-    ETC2_EAC_A8 = sys::basist_block_format_cETC2_EAC_A8, // alpha block of ETC2 EAC (first 8 bytes of the 16-bit ETC2 EAC RGBA format)
-    ASTC_4x4 = sys::basist_block_format_cASTC_4x4, // ASTC 4x4 (either color-only or color+alpha). Note that the transcoder always currently assumes sRGB is not enabled when outputting ASTC
-    // data. If you use a sRGB ASTC format you'll get ~1 LSB of additional error, because of the different way ASTC decoders scale 8-bit endpoints to 16-bits during unpacking.
-    ATC_RGB = sys::basist_block_format_cATC_RGB,
-    ATC_RGBA_INTERPOLATED_ALPHA = sys::basist_block_format_cATC_RGBA_INTERPOLATED_ALPHA,
-    FXT1_RGB = sys::basist_block_format_cFXT1_RGB, // Opaque-only, has oddball 8x4 pixel block size
-    PVRTC2_4_RGB = sys::basist_block_format_cPVRTC2_4_RGB,
-    PVRTC2_4_RGBA = sys::basist_block_format_cPVRTC2_4_RGBA,
-    ETC2_EAC_R11 = sys::basist_block_format_cETC2_EAC_R11,
-    ETC2_EAC_RG11 = sys::basist_block_format_cETC2_EAC_RG11,
-    RGB32 = sys::basist_block_format_cRGB32, // Writes RGB components to 32bpp output pixels
-    RGBA32 = sys::basist_block_format_cRGBA32, // Writes RGB255 components to 32bpp output pixels
-    A32 = sys::basist_block_format_cA32,     // Writes alpha component to 32bpp output pixels
-    RGB565 = sys::basist_block_format_cRGB565,
-    BGR565 = sys::basist_block_format_cBGR565,
-    RGBA4444_COLOR = sys::basist_block_format_cRGBA4444_COLOR,
-    RGBA4444_ALPHA = sys::basist_block_format_cRGBA4444_ALPHA,
-    RGBA4444_COLOR_OPAQUE = sys::basist_block_format_cRGBA4444_COLOR_OPAQUE,
-    RGBA4444 = sys::basist_block_format_cRGBA4444,
-}
-
-impl Into<sys::basist_block_format> for TranscoderBlockFormat {
-    fn into(self) -> sys::basist_block_format {
-        self as sys::basist_block_format
-    }
-}
-
-impl From<sys::basist_block_format> for TranscoderBlockFormat {
-    fn from(value: sys::basist_block_format) -> Self {
-        unsafe { std::mem::transmute(value as i32) }
-    }
-}
-
-impl TranscoderBlockFormat {
-    /// Returns block format name in ASCII
-    pub fn block_format_name(self) -> &'static str {
-        unsafe {
-            let value = sys::basis_get_block_format_name(self.into());
-            CStr::from_ptr(value).to_str().unwrap()
-        }
-    }
-}
-
-#[allow(non_camel_case_types)]
-#[derive(Copy, Clone, Debug, PartialEq)]
-#[repr(i32)]
-pub enum TextureFormat {
-    Invalid = sys::basisu_texture_format_cInvalidTextureFormat,
-
-    //
-    // Block-based formats
-    //
-    ETC1 = sys::basisu_texture_format_cETC1,           // ETC1
-    ETC1S = sys::basisu_texture_format_cETC1S, // ETC1 (subset: diff colors only, no subblocks)
-    ETC2 = sys::basisu_texture_format_cETC2_RGB, // ETC2 color block (basisu doesn't support ETC2 planar/T/H modes - just basic ETC1)
-    ETC2_RGBA = sys::basisu_texture_format_cETC2_RGBA, // ETC2 EAC alpha block followed by ETC2 color block
-    ETC2_ALPHA = sys::basisu_texture_format_cETC2_ALPHA, // ETC2 EAC alpha block
-    BC1 = sys::basisu_texture_format_cBC1,             // DXT1
-    BC3 = sys::basisu_texture_format_cBC3, // DXT5 (BC4/DXT5A block followed by a BC1/DXT1 block)
-    BC4 = sys::basisu_texture_format_cBC4, // DXT5A
-    BC5 = sys::basisu_texture_format_cBC5, // 3DC/DXN (two BC4/DXT5A blocks)
-    BC7 = sys::basisu_texture_format_cBC7,
-    ASTC4x4 = sys::basisu_texture_format_cASTC4x4, // LDR only
-    PVRTC1_4_RGB = sys::basisu_texture_format_cPVRTC1_4_RGB,
-    PVRTC1_4_RGBA = sys::basisu_texture_format_cPVRTC1_4_RGBA,
-    ATC_RGB = sys::basisu_texture_format_cATC_RGB,
-    ATC_RGBA_INTERPOLATED_ALPHA = sys::basisu_texture_format_cATC_RGBA_INTERPOLATED_ALPHA,
-    cFXT1_RGB = sys::basisu_texture_format_cFXT1_RGB,
-    cPVRTC2_4_RGBA = sys::basisu_texture_format_cPVRTC2_4_RGBA,
-    cETC2_R11_EAC = sys::basisu_texture_format_cETC2_R11_EAC,
-    cETC2_RG11_EAC = sys::basisu_texture_format_cETC2_RG11_EAC,
-    cUASTC4x4 = sys::basisu_texture_format_cUASTC4x4,
-    cBC1_NV = sys::basisu_texture_format_cBC1_NV,
-    cBC1_AMD = sys::basisu_texture_format_cBC1_AMD,
-
-    //
-    // Uncompressed/raw pixels
-    //
-    cRGBA32 = sys::basisu_texture_format_cRGBA32,
-    cRGB565 = sys::basisu_texture_format_cRGB565,
-    cBGR565 = sys::basisu_texture_format_cBGR565,
-    cRGBA4444 = sys::basisu_texture_format_cRGBA4444,
-    cABGR4444 = sys::basisu_texture_format_cABGR4444,
-}
-
-impl Into<sys::basisu_texture_format> for TextureFormat {
-    fn into(self) -> sys::basisu_texture_format {
-        self as sys::basisu_texture_format
-    }
-}
-
-impl From<sys::basisu_texture_format> for TextureFormat {
-    fn from(value: sys::basisu_texture_format) -> Self {
-        unsafe { std::mem::transmute(value as i32) }
-    }
-}
-
 bitflags::bitflags! {
+    /// Flags that affect transcoding
     pub struct DecodeFlags: u32 {
         /// PVRTC1: decode non-pow2 ETC1S texture level to the next larger power of 2 (not implemented yet, but we're going to support it). Ignored if the slice's dimensions are already a power of 2.
         const PVRTC_DECODE_TO_NEXT_POW_2 = sys::basist_basisu_decode_flags_cDecodeFlagsPVRTCDecodeToNextPow2;

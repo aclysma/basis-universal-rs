@@ -14,25 +14,9 @@ fn test_get_format_name() {
 }
 
 #[test]
-fn test_get_block_format_name() {
-    assert_eq!(
-        TranscoderBlockFormat::ASTC_4x4.block_format_name(),
-        "ASTC_4x4"
-    );
-}
-
-#[test]
 fn test_transcoder_format_has_alpha() {
     assert_eq!(TranscoderTextureFormat::BC1_RGB.has_alpha(), false);
     assert_eq!(TranscoderTextureFormat::BC7_RGBA.has_alpha(), true);
-}
-
-#[test]
-fn test_get_basisu_texture_format() {
-    assert_eq!(
-        TranscoderTextureFormat::BC1_RGB.texture_format(),
-        TextureFormat::BC1
-    );
 }
 
 #[test]

@@ -34,13 +34,14 @@ fn test_compressor_params_smoketest_bindings() {
     compressor_params.resize_source_image_list(8);
     compressor_params.clear_source_image_list();
     compressor_params.set_print_status_to_stdout(false);
-    compressor_params.set_quality_level(Some(128));
+    compressor_params.set_etc1s_quality_level(crate::ETC1S_QUALITY_DEFAULT);
+    compressor_params.set_uastc_quality_level(crate::UASTC_QUALITY_DEFAULT);
     compressor_params.set_use_global_codebook(true);
     compressor_params.set_auto_use_global_codebook(true);
     compressor_params.set_basis_format(BasisTextureFormat::UASTC4x4);
     compressor_params.set_generate_mipmaps(true);
 
-    compressor_params.clear();
+    compressor_params.reset();
 }
 
 #[test]
