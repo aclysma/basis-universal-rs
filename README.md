@@ -13,6 +13,24 @@ Encoding can be done ahead of time using a command line tool in the [upstream re
 
 Please refer to https://github.com/BinomialLLC/basis_universal for more details.
 
+## Performance
+
+The C++ code that is wrapped by these bindings is built at the same optimization level used for building the 
+`basis-universal-sys` crate. Most users of these bindings will benefit from building this crate with optimizations
+enabled, even during development. To do that, place this in your Cargo.toml file.
+
+```
+[profile.dev.package."basis-universal-sys"]
+opt-level = 3
+```
+
+Enable optimizations for ALL upstream crates works too:
+
+```
+[profile.dev.package."*"]
+opt-level = 3
+```
+
 ## License
 
 The bindings are licensed under either of
