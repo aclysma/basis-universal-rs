@@ -236,14 +236,14 @@ impl CompressorParams {
     /// compressed files. Good range to try is [.2-4]
     pub fn set_rdo_uastc(
         &mut self,
-        rdo_uastc_quality_scalar: Option<f32>
+        rdo_uastc_quality_scalar: Option<f32>,
     ) {
         unsafe {
             match rdo_uastc_quality_scalar {
                 Some(quality_scalar) => {
                     sys::compressor_params_set_rdo_uastc(self.0, true);
                     sys::compressor_params_set_rdo_uastc_quality_scalar(self.0, quality_scalar);
-                },
+                }
                 None => {
                     sys::compressor_params_set_rdo_uastc(self.0, false);
                 }

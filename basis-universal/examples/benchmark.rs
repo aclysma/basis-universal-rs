@@ -2,7 +2,7 @@ use basis_universal::{
     BasisTextureFormat, Compressor, CompressorParams, TranscodeParameters, Transcoder,
     TranscoderTextureFormat,
 };
-use image::{GenericImageView, DynamicImage};
+use image::{DynamicImage, GenericImageView};
 use std::io::Write;
 
 // This is not a proper benchmark, just a quick program for feeling out how options affect
@@ -17,8 +17,7 @@ pub fn main() {
     let source_file_format = image::ImageFormat::Png;
 
     let t0 = std::time::Instant::now();
-    let image_data =
-        image::load_from_memory_with_format(source_file, source_file_format).unwrap();
+    let image_data = image::load_from_memory_with_format(source_file, source_file_format).unwrap();
     let t1 = std::time::Instant::now();
 
     let source_file_size = source_file.len();
@@ -27,9 +26,7 @@ pub fn main() {
 
     println!(
         "Using {:?} file as source, decoded {} bytes in {} ms",
-        source_file_format,
-        source_file_size,
-        source_file_decode_time
+        source_file_format, source_file_size, source_file_decode_time
     );
 
     // We need to know how many color channels are in the image
@@ -70,21 +67,59 @@ pub fn main() {
 
     println!("source_file_size: {} KB", source_file_size / 1024);
     println!("source_file_decode_time: {}  ms", source_file_decode_time);
-    println!("uncompressed_memory_size: {} KB", uncompressed_memory_size / 1024);
-    println!("size: {}x{} channels: {}", image_data.width(), image_data.height(), channel_count);
+    println!(
+        "uncompressed_memory_size: {} KB",
+        uncompressed_memory_size / 1024
+    );
+    println!(
+        "size: {}x{} channels: {}",
+        image_data.width(),
+        image_data.height(),
+        channel_count
+    );
     for (format, quality, rdo_scalar) in compression_tests {
-        benchmark_encode(&image_data, channel_count, format, quality, rdo_scalar, compressor_thread_count);
+        benchmark_encode(
+            &image_data,
+            channel_count,
+            format,
+            quality,
+            rdo_scalar,
+            compressor_thread_count,
+        );
     }
 
     let transcode_tests = vec![
-        (BasisTextureFormat::ETC1S, basis_universal::ETC1S_QUALITY_MIN, None),
-        (BasisTextureFormat::ETC1S, basis_universal::ETC1S_QUALITY_DEFAULT, None),
-        (BasisTextureFormat::UASTC4x4, basis_universal::UASTC_QUALITY_MIN, None),
-        (BasisTextureFormat::UASTC4x4, basis_universal::UASTC_QUALITY_DEFAULT, None)
+        (
+            BasisTextureFormat::ETC1S,
+            basis_universal::ETC1S_QUALITY_MIN,
+            None,
+        ),
+        (
+            BasisTextureFormat::ETC1S,
+            basis_universal::ETC1S_QUALITY_DEFAULT,
+            None,
+        ),
+        (
+            BasisTextureFormat::UASTC4x4,
+            basis_universal::UASTC_QUALITY_MIN,
+            None,
+        ),
+        (
+            BasisTextureFormat::UASTC4x4,
+            basis_universal::UASTC_QUALITY_DEFAULT,
+            None,
+        ),
     ];
 
     for (format, quality, rdo_scalar) in transcode_tests {
-        benchmark_transcode(&image_data, channel_count, format, quality, rdo_scalar, compressor_thread_count);
+        benchmark_transcode(
+            &image_data,
+            channel_count,
+            format,
+            quality,
+            rdo_scalar,
+            compressor_thread_count,
+        );
     }
 }
 
@@ -94,7 +129,7 @@ fn benchmark_encode(
     basis_texture_format: BasisTextureFormat,
     quality: u32,
     rdo_scalar: Option<f32>,
-    compressor_thread_count: u32
+    compressor_thread_count: u32,
 ) {
     let mut compressor_params = CompressorParams::new();
     compressor_params.set_generate_mipmaps(false);
@@ -140,7 +175,10 @@ fn benchmark_encode(
         compression_time.as_secs_f32() * 1000.0
     );
 
-    println!("  basis compressed size: {} KB", compressor.basis_file_size() / 1024);
+    println!(
+        "  basis compressed size: {} KB",
+        compressor.basis_file_size() / 1024
+    );
 
     // LZ4 compression is recommended for UASTC4x4 files
     if basis_texture_format == BasisTextureFormat::UASTC4x4 {
@@ -149,7 +187,6 @@ fn benchmark_encode(
         let (lz4_compressed, result) = encoder.finish();
         result.unwrap();
         println!("  lz4 compressed size: {} KB", lz4_compressed.len() / 1024);
-
 
         let t0 = std::time::Instant::now();
         let decoder = lz4::Decoder::new(&*lz4_compressed).unwrap();
@@ -170,7 +207,7 @@ fn benchmark_transcode(
     basis_texture_format: BasisTextureFormat,
     quality: u32,
     rdo_scalar: Option<f32>,
-    compressor_thread_count: u32
+    compressor_thread_count: u32,
 ) {
     let mut compressor_params = CompressorParams::new();
     compressor_params.set_generate_mipmaps(false);
@@ -224,7 +261,7 @@ fn benchmark_transcode(
         TranscoderTextureFormat::BC1_RGB,
         TranscoderTextureFormat::BC7_RGBA,
         TranscoderTextureFormat::ASTC_4x4_RGBA,
-        TranscoderTextureFormat::RGBA32
+        TranscoderTextureFormat::RGBA32,
     ];
 
     for transcode_format in transcode_formats {
@@ -232,7 +269,9 @@ fn benchmark_transcode(
         // Now lets transcode it back to raw images
         //
         let t0 = std::time::Instant::now();
-        transcoder.prepare_transcoding(compressor.basis_file()).unwrap();
+        transcoder
+            .prepare_transcoding(compressor.basis_file())
+            .unwrap();
 
         let result = transcoder
             .transcode_image_level(
