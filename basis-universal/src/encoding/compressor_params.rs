@@ -16,6 +16,12 @@ pub enum ColorSpace {
 /// Parameters that are used to configure a [Compressor]
 pub struct CompressorParams(pub *mut sys::CompressorParams);
 
+impl Default for CompressorParams {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CompressorParams {
     /// Create a compressor with default options
     pub fn new() -> Self {

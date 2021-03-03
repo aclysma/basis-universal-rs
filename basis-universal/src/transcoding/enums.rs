@@ -244,8 +244,7 @@ impl TranscoderTextureFormat {
         } else if self == TranscoderTextureFormat::FXT1_RGB {
             let num_blocks_fxt1_x = (original_width + 7) / 8;
             let num_blocks_fxt1_y = (original_height + 3) / 4;
-            let total_blocks_fxt1 = num_blocks_fxt1_x * num_blocks_fxt1_y;
-            total_blocks_fxt1
+            num_blocks_fxt1_x * num_blocks_fxt1_y
         } else {
             total_slice_blocks
         };

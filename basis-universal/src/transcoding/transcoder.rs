@@ -46,6 +46,12 @@ pub enum TranscodeError {
     TranscodeFailed,
 }
 
+impl Default for Transcoder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Transcoder {
     /// Create a transcoder
     pub fn new() -> Transcoder {
@@ -312,7 +318,7 @@ impl Transcoder {
         //
         let decode_flags = transcode_parameters
             .decode_flags
-            .unwrap_or(DecodeFlags::empty());
+            .unwrap_or_else(DecodeFlags::empty);
         let output_row_pitch_in_blocks_or_pixels = transcode_parameters
             .output_row_pitch_in_blocks_or_pixels
             .unwrap_or(0);

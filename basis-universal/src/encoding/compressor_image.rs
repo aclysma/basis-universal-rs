@@ -84,6 +84,10 @@ impl CompressorImageRef {
     }
 
     /// Returns teh pixel value at a given x,y without doing bounds checking
+    ///
+    /// # Safety
+    ///
+    /// Accessing pixel out of bounds of the image will result in undefined behavior
     pub unsafe fn pixel_at_unchecked(
         &self,
         width: u32,
