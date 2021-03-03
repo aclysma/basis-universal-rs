@@ -231,6 +231,26 @@ impl CompressorParams {
         }
     }
 
+    /// Enable/disable UASTC RDO post-processing and set UASTC RDO quality scalar to X. Lower
+    /// values=higher quality/larger LZ compressed files, higher values=lower quality/smaller LZ
+    /// compressed files. Good range to try is [.2-4]
+    pub fn set_rdo_uastc(
+        &mut self,
+        rdo_uastc_quality_scalar: Option<f32>
+    ) {
+        unsafe {
+            match rdo_uastc_quality_scalar {
+                Some(quality_scalar) => {
+                    sys::compressor_params_set_rdo_uastc(self.0, true);
+                    sys::compressor_params_set_rdo_uastc_quality_scalar(self.0, quality_scalar);
+                },
+                None => {
+                    sys::compressor_params_set_rdo_uastc(self.0, false);
+                }
+            }
+        }
+    }
+
     /// Generate mipmaps for each source image
     ///
     /// By default, sRGB textures will be converted from sRGB to linear before mipmap filtering.

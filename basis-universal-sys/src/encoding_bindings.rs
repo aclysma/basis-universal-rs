@@ -402,6 +402,18 @@ extern "C" {
     );
 }
 extern "C" {
+    pub fn compressor_params_set_rdo_uastc(
+        params: *mut CompressorParams,
+        rdo_uastc: bool,
+    );
+}
+extern "C" {
+    pub fn compressor_params_set_rdo_uastc_quality_scalar(
+        params: *mut CompressorParams,
+        rdo_uastc_quality_scalar: f32,
+    );
+}
+extern "C" {
     pub fn compressor_params_set_generate_mipmaps(
         params: *mut CompressorParams,
         generate_mipmaps: bool,

@@ -195,6 +195,14 @@ extern "C" {
         params->pParams->m_no_endpoint_rdo = no_endpoint_rdo;
     }
 
+    void compressor_params_set_rdo_uastc(CompressorParams *params, bool rdo_uastc) {
+        params->pParams->m_rdo_uastc = rdo_uastc;
+    }
+
+    void compressor_params_set_rdo_uastc_quality_scalar(CompressorParams *params, float rdo_uastc_quality_scalar) {
+        params->pParams->m_rdo_uastc_quality_scalar = rdo_uastc_quality_scalar;
+    }
+
     void compressor_params_set_generate_mipmaps(CompressorParams *params, bool generate_mipmaps) {
         params->pParams->m_mip_gen = generate_mipmaps;
     }

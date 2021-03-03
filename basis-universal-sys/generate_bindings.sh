@@ -77,6 +77,8 @@ bindgen vendor/encoding_wrapper.cpp -o src/encoding_bindings.rs \
   --whitelist-function compressor_params_set_mip_srgb \
   --whitelist-function compressor_params_set_no_selector_rdo \
   --whitelist-function compressor_params_set_no_endpoint_rdo \
+  --whitelist-function compressor_params_set_rdo_uastc \
+  --whitelist-function compressor_params_set_rdo_uastc_quality_scalar \
   --whitelist-function compressor_params_set_generate_mipmaps \
   --whitelist-function compressor_params_set_mip_smallest_dimension \
   --whitelist-function compressor_params_set_userdata \
