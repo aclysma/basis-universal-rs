@@ -19,8 +19,8 @@ Please refer to https://github.com/BinomialLLC/basis_universal for more details.
 
 ## Status
 
-These bindings should be pretty close to production ready. However, I want to take a few weeks to road test it with my
-rendering framework before releasing 0.1.0. This crate will not follow semver until 0.1.0 has been published.
+These bindings should be production-ready. The API should remain fairly stable (assuming no major upstream changes in 
+the wrapped `basis-universal` library)
 
 ## Performance
 
