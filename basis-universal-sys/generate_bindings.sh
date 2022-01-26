@@ -13,6 +13,11 @@ bindgen vendor/transcoding_wrapper.cpp -o src/transcoding_bindings.rs \
   --whitelist-function basis_is_format_supported \
   --whitelist-function basis_validate_output_buffer_size \
   \
+  --whitelist-function low_level_uastc_transcoder_new \
+  --whitelist-function low_level_uastc_transcoder_delete \
+  \
+  --whitelist-function low_level_uastc_transcoder_transcode_slice \
+  \
   --whitelist-function transcoder_new \
   --whitelist-function transcoder_delete \
   \
@@ -36,6 +41,9 @@ bindgen vendor/transcoding_wrapper.cpp -o src/transcoding_bindings.rs \
   --whitelist-function transcoder_transcode_image_level \
   \
   --whitelist-function basisu_transcoder_init \
+  \
+  --opaque-type LowLevelUastcTranscoder \
+  --opaque-type basist::block_format \
   \
   --opaque-type Transcoder \
   --opaque-type basist::basisu_transcoder_state \

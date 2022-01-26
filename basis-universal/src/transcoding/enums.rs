@@ -324,3 +324,129 @@ bitflags::bitflags! {
         const HIGH_QULITY = sys::basist_basisu_decode_flags_cDecodeFlagsHighQuality;
     }
 }
+
+/// The block format to transcode universal texture data into
+#[allow(non_camel_case_types)]
+#[derive(Copy, Clone, Debug, PartialEq)]
+#[repr(i32)]
+pub enum TranscoderBlockFormat {
+    /// ETC1S RGB
+    ETC1 = sys::basist_block_format_cETC1,
+    /// full ETC2 EAC RGBA8 block
+    ETC2_RGBA = sys::basist_block_format_cETC2_RGBA,
+    /// DXT1 RGB
+    BC1 = sys::basist_block_format_cBC1,
+    /// BC4 block followed by a four color BC1 block
+    BC3 = sys::basist_block_format_cBC3,
+    /// DXT5A (alpha block only)
+    BC4 = sys::basist_block_format_cBC4,
+    /// two BC4 blocks
+    BC5 = sys::basist_block_format_cBC5,
+    /// opaque-only PVRTC1 4bpp
+    PVRTC1_4_RGB = sys::basist_block_format_cPVRTC1_4_RGB,
+    /// PVRTC1 4bpp RGBA
+    PVRTC1_4_RGBA = sys::basist_block_format_cPVRTC1_4_RGBA,
+    /// Full BC7 block, any mode
+    BC7 = sys::basist_block_format_cBC7,
+    /// RGB BC7 mode 5 color (writes an opaque mode 5 block)
+    BC7_M5_COLOR = sys::basist_block_format_cBC7_M5_COLOR,
+    /// alpha portion of BC7 mode 5 (cBC7_M5_COLOR output data must have been written to the output buffer first to set the mode/rot fields etc.)
+    BC7_M5_ALPHA = sys::basist_block_format_cBC7_M5_ALPHA,
+    /// alpha block of ETC2 EAC (first 8 bytes of the 16-bit ETC2 EAC RGBA format)
+    ETC2_EAC_A8 = sys::basist_block_format_cETC2_EAC_A8,
+    /// ASTC 4x4 (either color-only or color+alpha). Note that the transcoder always currently assumes sRGB is not enabled when outputting ASTC
+    /// data. If you use a sRGB ASTC format you'll get ~1 LSB of additional error, because of the different way ASTC decoders scale 8-bit endpoints to 16-bits during unpacking.
+    ASTC_4x4 = sys::basist_block_format_cASTC_4x4,
+
+    ATC_RGB = sys::basist_block_format_cATC_RGB,
+    ATC_RGBA_INTERPOLATED_ALPHA = sys::basist_block_format_cATC_RGBA_INTERPOLATED_ALPHA,
+    /// Opaque-only, has oddball 8x4 pixel block size
+    FXT1_RGB = sys::basist_block_format_cFXT1_RGB,
+
+    PVRTC2_4_RGB = sys::basist_block_format_cPVRTC2_4_RGB,
+    PVRTC2_4_RGBA = sys::basist_block_format_cPVRTC2_4_RGBA,
+
+    ETC2_EAC_R11 = sys::basist_block_format_cETC2_EAC_R11,
+    ETC2_EAC_RG11 = sys::basist_block_format_cETC2_EAC_RG11,
+
+    /// Used internally: Write 16-bit endpoint and selector indices directly to output (output block must be at least 32-bits)
+    Indices = sys::basist_block_format_cIndices,
+
+    /// Writes RGB components to 32bpp output pixels
+    RGB32 = sys::basist_block_format_cRGB32,
+    /// Writes RGB255 components to 32bpp output pixels
+    RGBA32 = sys::basist_block_format_cRGBA32,
+    /// Writes alpha component to 32bpp output pixels
+    A32 = sys::basist_block_format_cA32,
+
+    RGB565 = sys::basist_block_format_cRGB565,
+    BGR565 = sys::basist_block_format_cBGR565,
+
+    RGBA4444_COLOR = sys::basist_block_format_cRGBA4444_COLOR,
+    RGBA4444_ALPHA = sys::basist_block_format_cRGBA4444_ALPHA,
+    RGBA4444_COLOR_OPAQUE = sys::basist_block_format_cRGBA4444_COLOR_OPAQUE,
+    RGBA4444 = sys::basist_block_format_cRGBA4444,
+}
+
+impl Into<sys::basist_block_format> for TranscoderBlockFormat {
+    fn into(self) -> sys::basist_block_format {
+        self as sys::basist_block_format
+    }
+}
+
+impl From<sys::basist_block_format> for TranscoderBlockFormat {
+    fn from(value: sys::basist_block_format) -> Self {
+        unsafe { std::mem::transmute(value as i32) }
+    }
+}
+
+impl TranscoderBlockFormat {
+    /// For compressed texture formats, this returns the # of bytes per block. For uncompressed, it returns the # of bytes per pixel.
+    pub fn bytes_per_block_or_pixel(self) -> u32 {
+        match self {
+            TranscoderBlockFormat::ETC1 => 8,
+            TranscoderBlockFormat::ETC2_RGBA => 16,
+            TranscoderBlockFormat::BC1 => 8,
+            TranscoderBlockFormat::BC3 => 16,
+            TranscoderBlockFormat::BC4 => 8,
+            TranscoderBlockFormat::BC5 => 16,
+            TranscoderBlockFormat::PVRTC1_4_RGB => 8,
+            TranscoderBlockFormat::PVRTC1_4_RGBA => 8,
+            TranscoderBlockFormat::BC7 => 16,
+            TranscoderBlockFormat::BC7_M5_COLOR => 16,
+            TranscoderBlockFormat::BC7_M5_ALPHA => 16,
+            TranscoderBlockFormat::ETC2_EAC_A8 => 8,
+            TranscoderBlockFormat::ASTC_4x4 => 16,
+            TranscoderBlockFormat::ATC_RGB => 8,
+            TranscoderBlockFormat::ATC_RGBA_INTERPOLATED_ALPHA => 16,
+            TranscoderBlockFormat::FXT1_RGB => 8,
+            TranscoderBlockFormat::PVRTC2_4_RGB => 8,
+            TranscoderBlockFormat::PVRTC2_4_RGBA => 8,
+            TranscoderBlockFormat::ETC2_EAC_R11 => 8,
+            TranscoderBlockFormat::ETC2_EAC_RG11 => 16,
+            TranscoderBlockFormat::Indices => 2,
+            TranscoderBlockFormat::RGB32 => 4,
+            TranscoderBlockFormat::RGBA32 => 4,
+            TranscoderBlockFormat::A32 => 4,
+            TranscoderBlockFormat::RGB565 => 2,
+            TranscoderBlockFormat::BGR565 => 2,
+            TranscoderBlockFormat::RGBA4444_COLOR => 2,
+            TranscoderBlockFormat::RGBA4444_ALPHA => 2,
+            TranscoderBlockFormat::RGBA4444_COLOR_OPAQUE => 2,
+            TranscoderBlockFormat::RGBA4444 => 2,
+        }
+    }
+
+    /// Returns the block width for the specified texture format, which is currently either 4 or 8 for FXT1.
+    pub fn block_width(self) -> u32 {
+        match self {
+            TranscoderBlockFormat::FXT1_RGB => 8,
+            _ => 4,
+        }
+    }
+
+    /// Returns the block height for the specified texture format, which is currently always 4.
+    pub fn block_height(self) -> u32 {
+        4
+    }
+}
