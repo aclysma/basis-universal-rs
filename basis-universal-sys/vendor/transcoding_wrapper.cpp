@@ -103,6 +103,11 @@ extern "C" {
         return basist::basis_transcoder_format_is_uncompressed(tex_type);
     }
 
+    // Returns true if the block format is an uncompressed (raw pixel) format.
+    bool basis_block_format_is_uncompressed(basist::block_format fmt) {
+        return basist::basis_block_format_is_uncompressed(fmt);
+    }
+
     // Returns the # of bytes per pixel for uncompressed formats, or 0 for block texture formats.
     uint32_t basis_get_uncompressed_bytes_per_pixel(basist::transcoder_texture_format fmt) {
         return basist::basis_get_uncompressed_bytes_per_pixel(fmt);

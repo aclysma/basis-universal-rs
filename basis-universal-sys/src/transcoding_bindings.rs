@@ -882,6 +882,9 @@ extern "C" {
     ) -> bool;
 }
 extern "C" {
+    pub fn basis_block_format_is_uncompressed(fmt: basist_block_format) -> bool;
+}
+extern "C" {
     pub fn basis_get_uncompressed_bytes_per_pixel(fmt: basist_transcoder_texture_format) -> u32;
 }
 extern "C" {

@@ -7,6 +7,7 @@ bindgen vendor/transcoding_wrapper.cpp -o src/transcoding_bindings.rs \
   --whitelist-function basis_get_texture_type_name \
   \
   --whitelist-function basis_transcoder_format_is_uncompressed \
+  --whitelist-function basis_block_format_is_uncompressed \
   --whitelist-function basis_get_uncompressed_bytes_per_pixel \
   --whitelist-function basis_get_block_width \
   --whitelist-function basis_get_block_height \

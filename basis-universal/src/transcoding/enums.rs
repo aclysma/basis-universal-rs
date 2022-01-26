@@ -437,6 +437,19 @@ impl TranscoderBlockFormat {
         }
     }
 
+    /// Returns format's name in ASCII
+    pub fn format_name(self) -> &'static str {
+        unsafe {
+            let value = sys::basis_get_block_format_name(self.into());
+            CStr::from_ptr(value).to_str().unwrap()
+        }
+    }
+
+    /// Returns true if the block format is a compressed format.
+    pub fn is_compressed(self) -> bool {
+        unsafe { !sys::basis_block_format_is_uncompressed(self.into()) }
+    }
+
     /// Returns the block width for the specified texture format, which is currently either 4 or 8 for FXT1.
     pub fn block_width(self) -> u32 {
         match self {
