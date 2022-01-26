@@ -186,7 +186,7 @@ impl TranscoderTextureFormat {
         unsafe { sys::basis_transcoder_format_has_alpha(self.into()) }
     }
 
-    /// Returns true if the transcoder texture type is an uncompressed (raw pixel) format.
+    /// Returns true if the transcoder texture type is a compressed format.
     pub fn is_compressed(self) -> bool {
         unsafe { !sys::basis_transcoder_format_is_uncompressed(self.into()) }
     }
