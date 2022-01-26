@@ -933,6 +933,9 @@ extern "C" {
     pub fn low_level_uastc_transcoder_new() -> *mut LowLevelUastcTranscoder;
 }
 extern "C" {
+    pub fn low_level_uastc_transcoder_delete(transcoder: *mut LowLevelUastcTranscoder);
+}
+extern "C" {
     pub fn low_level_uastc_transcoder_transcode_slice(
         transcoder: *mut LowLevelUastcTranscoder,
         pDst_blocks: *mut ::std::os::raw::c_void,
@@ -953,9 +956,6 @@ extern "C" {
         channel1: ::std::os::raw::c_int,
         decode_flags: u32,
     ) -> bool;
-}
-extern "C" {
-    pub fn low_level_uastc_transcoder_delete(transcoder: *mut LowLevelUastcTranscoder);
 }
 #[repr(C)]
 #[repr(align(8))]
