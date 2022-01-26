@@ -462,4 +462,59 @@ impl TranscoderBlockFormat {
     pub fn block_height(self) -> u32 {
         4
     }
+
+    /// Calculate the minimum output buffer required to store transcoded data in blocks for
+    /// compressed formats and pixels for uncompressed formats
+    pub fn calculate_minimum_output_buffer_blocks_or_pixels(
+        self,
+        original_width: u32,
+        original_height: u32,
+        total_slice_blocks: u32,
+        output_row_pitch_in_blocks_or_pixels: Option<u32>,
+        output_rows_in_pixels: Option<u32>,
+    ) -> u32 {
+        // Default of 0 is fine for these values
+        let mut output_row_pitch_in_blocks_or_pixels =
+            output_row_pitch_in_blocks_or_pixels.unwrap_or(0);
+        let mut output_rows_in_pixels = output_rows_in_pixels.unwrap_or(0);
+
+        // Derived from implementation of basis_validate_output_buffer_size
+
+        if !self.is_compressed() {
+            // Assume the output buffer is orig_width by orig_height
+            if output_row_pitch_in_blocks_or_pixels == 0 {
+                output_row_pitch_in_blocks_or_pixels = original_width;
+            }
+
+            if output_rows_in_pixels == 0 {
+                output_rows_in_pixels = original_height;
+            }
+
+            output_rows_in_pixels * output_row_pitch_in_blocks_or_pixels
+        } else if self == TranscoderBlockFormat::FXT1_RGB {
+            let num_blocks_fxt1_x = (original_width + 7) / 8;
+            let num_blocks_fxt1_y = (original_height + 3) / 4;
+            num_blocks_fxt1_x * num_blocks_fxt1_y
+        } else {
+            total_slice_blocks
+        }
+    }
+
+    /// Calculate the minimum output buffer required to store transcoded data in bytes
+    pub fn calculate_minimum_output_buffer_bytes(
+        self,
+        original_width: u32,
+        original_height: u32,
+        total_slice_blocks: u32,
+        output_row_pitch_in_blocks_or_pixels: Option<u32>,
+        output_rows_in_pixels: Option<u32>,
+    ) -> u32 {
+        self.calculate_minimum_output_buffer_blocks_or_pixels(
+            original_width,
+            original_height,
+            total_slice_blocks,
+            output_row_pitch_in_blocks_or_pixels,
+            output_rows_in_pixels,
+        ) * self.bytes_per_block_or_pixel()
+    }
 }
