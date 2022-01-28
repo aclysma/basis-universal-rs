@@ -85,7 +85,7 @@ pub enum TranscoderTextureFormat {
     /// Opaque only, returns RGB or alpha data if cDecodeFlagsTranscodeAlphaDataToOpaqueFormats flag is specified
     ETC1_RGB = sys::basist_transcoder_texture_format_cTFETC1_RGB,
     /// Opaque+alpha, ETC2_EAC_A8 block followed by a ETC1 block, alpha channel will be opaque for opaque .basis files
-    ETC2_RBG = sys::basist_transcoder_texture_format_cTFETC2_RGBA,
+    ETC2_RGBA = sys::basist_transcoder_texture_format_cTFETC2_RGBA,
 
     //
     // BC1-5, BC7 (desktop, some mobile devices)
@@ -321,7 +321,7 @@ bitflags::bitflags! {
         /// Used internally when decoding formats like ASTC that require both color and alpha data to be available when transcoding to the output format.
         const OUTPUT_HAS_ALPHA_INDICES = sys::basist_basisu_decode_flags_cDecodeFlagsOutputHasAlphaIndices;
 
-        const HIGH_QULITY = sys::basist_basisu_decode_flags_cDecodeFlagsHighQuality;
+        const HIGH_QUALITY = sys::basist_basisu_decode_flags_cDecodeFlagsHighQuality;
     }
 }
 
