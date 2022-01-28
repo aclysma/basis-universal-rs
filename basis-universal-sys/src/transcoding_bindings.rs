@@ -882,6 +882,9 @@ extern "C" {
     ) -> bool;
 }
 extern "C" {
+    pub fn basis_block_format_is_uncompressed(fmt: basist_block_format) -> bool;
+}
+extern "C" {
     pub fn basis_get_uncompressed_bytes_per_pixel(fmt: basist_transcoder_texture_format) -> u32;
 }
 extern "C" {
@@ -905,6 +908,53 @@ extern "C" {
         output_row_pitch_in_blocks_or_pixels: u32,
         output_rows_in_pixels: u32,
         total_slice_blocks: u32,
+    ) -> bool;
+}
+#[repr(C)]
+#[repr(align(8))]
+#[derive(Debug, Copy, Clone)]
+pub struct LowLevelUastcTranscoder {
+    pub _bindgen_opaque_blob: u64,
+}
+#[test]
+fn bindgen_test_layout_LowLevelUastcTranscoder() {
+    assert_eq!(
+        ::std::mem::size_of::<LowLevelUastcTranscoder>(),
+        8usize,
+        concat!("Size of: ", stringify!(LowLevelUastcTranscoder))
+    );
+    assert_eq!(
+        ::std::mem::align_of::<LowLevelUastcTranscoder>(),
+        8usize,
+        concat!("Alignment of ", stringify!(LowLevelUastcTranscoder))
+    );
+}
+extern "C" {
+    pub fn low_level_uastc_transcoder_new() -> *mut LowLevelUastcTranscoder;
+}
+extern "C" {
+    pub fn low_level_uastc_transcoder_delete(transcoder: *mut LowLevelUastcTranscoder);
+}
+extern "C" {
+    pub fn low_level_uastc_transcoder_transcode_slice(
+        transcoder: *mut LowLevelUastcTranscoder,
+        pDst_blocks: *mut ::std::os::raw::c_void,
+        num_blocks_x: u32,
+        num_blocks_y: u32,
+        pImage_data: *const u8,
+        image_data_size: u32,
+        fmt: basist_block_format,
+        output_block_or_pixel_stride_in_bytes: u32,
+        bc1_allow_threecolor_blocks: bool,
+        has_alpha: bool,
+        orig_width: u32,
+        orig_height: u32,
+        output_row_pitch_in_blocks_or_pixels: u32,
+        pState: *mut basist_basisu_transcoder_state,
+        output_rows_in_pixels: u32,
+        channel0: ::std::os::raw::c_int,
+        channel1: ::std::os::raw::c_int,
+        decode_flags: u32,
     ) -> bool;
 }
 #[repr(C)]
