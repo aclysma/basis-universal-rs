@@ -14,39 +14,42 @@ fn build_with_common_settings() -> cc::Build {
     build
 }
 
-fn main() { /*
-                // Compile this separately as c code
-                build_with_common_settings()
-                    .file("vendor/basis_universal/encoder/apg_bmp.c")
-                    .compile("basisuniversalc");
+fn main() {
+    if std::env::var("TARGET") == Ok("wasm32-unknown-unknown".into()) {
+        return;
+    }
 
-                build_with_common_settings()
-                    .cpp(true)
-                    .define("BASISD_SUPPORT_KTX2_ZSTD", "0")
-                    .flag_if_supported("--std=c++11")
-                    .file("vendor/basis_universal/encoder/basisu_astc_decomp.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_backend.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_basis_file.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_bc7enc.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_comp.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_enc.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_etc.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_frontend.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_global_selector_palette_helpers.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_gpu_texture.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_kernels_sse.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_pvrtc1_4.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_resample_filters.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_resampler.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_ssim.cpp")
-                    .file("vendor/basis_universal/encoder/basisu_uastc_enc.cpp")
-                    .file("vendor/basis_universal/encoder/jpgd.cpp")
-                    .file("vendor/basis_universal/encoder/lodepng.cpp")
-                    .file("vendor/basis_universal/transcoder/basisu_transcoder.cpp")
-                    .file("vendor/transcoding_wrapper.cpp")
-                    .file("vendor/encoding_wrapper.cpp")
-                    .compile("basisuniversal");
+    // Compile this separately as c code
+    build_with_common_settings()
+        .file("vendor/basis_universal/encoder/apg_bmp.c")
+        .compile("basisuniversalc");
 
-                // We regenerate binding code and check it in. (See generate_bindings.sh)
-            */
+    build_with_common_settings()
+        .cpp(true)
+        .define("BASISD_SUPPORT_KTX2_ZSTD", "0")
+        .flag_if_supported("--std=c++11")
+        .file("vendor/basis_universal/encoder/basisu_astc_decomp.cpp")
+        .file("vendor/basis_universal/encoder/basisu_backend.cpp")
+        .file("vendor/basis_universal/encoder/basisu_basis_file.cpp")
+        .file("vendor/basis_universal/encoder/basisu_bc7enc.cpp")
+        .file("vendor/basis_universal/encoder/basisu_comp.cpp")
+        .file("vendor/basis_universal/encoder/basisu_enc.cpp")
+        .file("vendor/basis_universal/encoder/basisu_etc.cpp")
+        .file("vendor/basis_universal/encoder/basisu_frontend.cpp")
+        .file("vendor/basis_universal/encoder/basisu_global_selector_palette_helpers.cpp")
+        .file("vendor/basis_universal/encoder/basisu_gpu_texture.cpp")
+        .file("vendor/basis_universal/encoder/basisu_kernels_sse.cpp")
+        .file("vendor/basis_universal/encoder/basisu_pvrtc1_4.cpp")
+        .file("vendor/basis_universal/encoder/basisu_resample_filters.cpp")
+        .file("vendor/basis_universal/encoder/basisu_resampler.cpp")
+        .file("vendor/basis_universal/encoder/basisu_ssim.cpp")
+        .file("vendor/basis_universal/encoder/basisu_uastc_enc.cpp")
+        .file("vendor/basis_universal/encoder/jpgd.cpp")
+        .file("vendor/basis_universal/encoder/lodepng.cpp")
+        .file("vendor/basis_universal/transcoder/basisu_transcoder.cpp")
+        .file("vendor/transcoding_wrapper.cpp")
+        .file("vendor/encoding_wrapper.cpp")
+        .compile("basisuniversal");
+
+    // We regenerate binding code and check it in. (See generate_bindings.sh)
 }

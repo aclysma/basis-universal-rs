@@ -289,8 +289,8 @@ impl TranscoderTextureFormat {
         original_width: u32,
         original_height: u32,
         total_slice_blocks: u32,
-        mut output_row_pitch_in_blocks_or_pixels: Option<u32>,
-        mut output_rows_in_pixels: Option<u32>,
+        output_row_pitch_in_blocks_or_pixels: Option<u32>,
+        output_rows_in_pixels: Option<u32>,
     ) -> bool {
         if !self.is_compressed() {
             let output_row_pitch_in_blocks_or_pixels =
