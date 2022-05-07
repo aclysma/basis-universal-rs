@@ -29,7 +29,10 @@ pub fn transcoder_init() {
             let lock = TRANSCODER_INIT_LOCK.lock().unwrap();
             if !TRANSCODER_INIT_CALLED.load(Ordering::Acquire) {
                 // Run the init code
+                #[cfg(not(target_arch = "wasm32"))]
                 sys::basisu_encoder_init();
+                #[cfg(target_arch = "wasm32")]
+                basis_universal_wasm::initialize_basis();
                 TRANSCODER_INIT_CALLED.store(true, Ordering::Release);
             }
             std::mem::drop(lock);

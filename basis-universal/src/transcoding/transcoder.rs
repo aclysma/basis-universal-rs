@@ -386,7 +386,10 @@ impl Drop for Transcoder {
     }
 }
 
-pub struct LowLevelUastcTranscoder;
+pub struct LowLevelUastcTranscoder {
+    #[cfg(not(target_arch = "wasm32"))]
+    inner: *mut sys::LowLevelUastcTranscoder,
+}
 
 impl Default for LowLevelUastcTranscoder {
     fn default() -> Self {
@@ -406,9 +409,11 @@ pub struct SliceParametersUastc {
 impl LowLevelUastcTranscoder {
     /// Create a LowLevelUastcTranscoder
     pub fn new() -> LowLevelUastcTranscoder {
-        Self
-        //transcoder_init();
-        //unsafe { LowLevelUastcTranscoder(sys::low_level_uastc_transcoder_new()) }
+        transcoder_init();
+        Self {
+            #[cfg(not(target_arch = "wasm32"))]
+            inner: unsafe { LowLevelUastcTranscoder(sys::low_level_uastc_transcoder_new()) },
+        }
     }
 
     pub fn transcode_slice(
@@ -473,8 +478,9 @@ impl LowLevelUastcTranscoder {
 
 impl Drop for LowLevelUastcTranscoder {
     fn drop(&mut self) {
+        #[cfg(not(target_arch = "wasm32"))]
         unsafe {
-            //sys::low_level_uastc_transcoder_delete(self.0);
+            sys::low_level_uastc_transcoder_delete(self.inner);
         }
     }
 }

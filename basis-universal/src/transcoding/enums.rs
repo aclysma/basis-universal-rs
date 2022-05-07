@@ -298,21 +298,21 @@ impl TranscoderTextureFormat {
 
             let output_rows_in_pixels = output_rows_in_pixels.unwrap_or(original_height);
 
-            if (output_blocks_buf_size_in_blocks_or_pixels
-                < (output_rows_in_pixels * output_row_pitch_in_blocks_or_pixels))
+            if output_blocks_buf_size_in_blocks_or_pixels
+                < (output_rows_in_pixels * output_row_pitch_in_blocks_or_pixels)
             {
                 return false;
             }
-        } else if (self == Self::FXT1_RGB) {
+        } else if self == Self::FXT1_RGB {
             let num_blocks_fxt1_x = (original_width + 7) / 8;
             let num_blocks_fxt1_y = (original_height + 3) / 4;
             let total_blocks_fxt1 = num_blocks_fxt1_x * num_blocks_fxt1_y;
 
-            if (output_blocks_buf_size_in_blocks_or_pixels < total_blocks_fxt1) {
+            if output_blocks_buf_size_in_blocks_or_pixels < total_blocks_fxt1 {
                 return false;
             }
         } else {
-            if (output_blocks_buf_size_in_blocks_or_pixels < total_slice_blocks) {
+            if output_blocks_buf_size_in_blocks_or_pixels < total_slice_blocks {
                 return false;
             }
         }
