@@ -386,7 +386,7 @@ impl Drop for Transcoder {
     }
 }
 
-pub struct LowLevelUastcTranscoder(*mut sys::LowLevelUastcTranscoder);
+pub struct LowLevelUastcTranscoder;
 
 impl Default for LowLevelUastcTranscoder {
     fn default() -> Self {
@@ -406,8 +406,9 @@ pub struct SliceParametersUastc {
 impl LowLevelUastcTranscoder {
     /// Create a LowLevelUastcTranscoder
     pub fn new() -> LowLevelUastcTranscoder {
-        transcoder_init();
-        unsafe { LowLevelUastcTranscoder(sys::low_level_uastc_transcoder_new()) }
+        Self
+        //transcoder_init();
+        //unsafe { LowLevelUastcTranscoder(sys::low_level_uastc_transcoder_new()) }
     }
 
     pub fn transcode_slice(
@@ -418,7 +419,7 @@ impl LowLevelUastcTranscoder {
         transcode_block_format: TranscoderBlockFormat,
     ) -> Result<Vec<u8>, TranscodeError> {
         let bc1_allow_threecolor_blocks = false;
-        let transcoder_state = std::ptr::null_mut();
+        //let transcoder_state = std::ptr::null_mut();
         let channel0 = 0;
         let channel1 = 3;
 
@@ -440,13 +441,13 @@ impl LowLevelUastcTranscoder {
 
         let mut output = vec![0_u8; required_buffer_bytes];
         let success = unsafe {
-            sys::low_level_uastc_transcoder_transcode_slice(
-                self.0,
-                output.as_mut_ptr() as _,
+            basis_universal_wasm::transcode_uastc_slice(
+                //self.0,
+                &unsafe { js_sys::Uint8Array::view(&output) },
                 slice_parameters.num_blocks_x,
                 slice_parameters.num_blocks_y,
-                data.as_ptr() as _,
-                data.len() as u32,
+                &unsafe { js_sys::Uint8Array::view(&data) },
+                //data.len() as u32,
                 transcode_block_format.into(),
                 output_block_or_pixel_stride_in_bytes,
                 bc1_allow_threecolor_blocks,
@@ -454,7 +455,7 @@ impl LowLevelUastcTranscoder {
                 slice_parameters.original_width,
                 slice_parameters.original_height,
                 output_row_pitch_in_blocks_or_pixels,
-                transcoder_state,
+                //transcoder_state,
                 output_rows_in_pixels,
                 channel0,
                 channel1,
@@ -473,7 +474,7 @@ impl LowLevelUastcTranscoder {
 impl Drop for LowLevelUastcTranscoder {
     fn drop(&mut self) {
         unsafe {
-            sys::low_level_uastc_transcoder_delete(self.0);
+            //sys::low_level_uastc_transcoder_delete(self.0);
         }
     }
 }

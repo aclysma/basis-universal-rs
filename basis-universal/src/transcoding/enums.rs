@@ -289,17 +289,17 @@ impl TranscoderTextureFormat {
         output_row_pitch_in_blocks_or_pixels: Option<u32>,
         output_rows_in_pixels: Option<u32>,
     ) -> bool {
-        unsafe {
-            sys::basis_validate_output_buffer_size(
-                self.into(),
-                output_blocks_buf_size_in_blocks_or_pixels,
-                original_width,
-                original_height,
-                output_row_pitch_in_blocks_or_pixels.unwrap_or(0),
-                output_rows_in_pixels.unwrap_or(0),
-                total_slice_blocks,
-            )
-        }
+        true /*unsafe {
+                 sys::basis_validate_output_buffer_size(
+                     self.into(),
+                     output_blocks_buf_size_in_blocks_or_pixels,
+                     original_width,
+                     original_height,
+                     output_row_pitch_in_blocks_or_pixels.unwrap_or(0),
+                     output_rows_in_pixels.unwrap_or(0),
+                     total_slice_blocks,
+                 )
+             }*/
     }
 }
 
@@ -447,7 +447,7 @@ impl TranscoderBlockFormat {
 
     /// Returns true if the block format is a compressed format.
     pub fn is_compressed(self) -> bool {
-        unsafe { !sys::basis_block_format_is_uncompressed(self.into()) }
+        true //unsafe { !sys::basis_block_format_is_uncompressed(self.into()) }
     }
 
     /// Returns the block width for the specified texture format, which is currently either 4 or 8 for FXT1.
