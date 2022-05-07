@@ -443,10 +443,10 @@ impl LowLevelUastcTranscoder {
         let success = unsafe {
             basis_universal_wasm::transcode_uastc_slice(
                 //self.0,
-                &unsafe { js_sys::Uint8Array::view(&output) },
+                &js_sys::Uint8Array::view(&output),
                 slice_parameters.num_blocks_x,
                 slice_parameters.num_blocks_y,
-                &unsafe { js_sys::Uint8Array::view(&data) },
+                &js_sys::Uint8Array::view(&data),
                 //data.len() as u32,
                 transcode_block_format.into(),
                 output_block_or_pixel_stride_in_bytes,

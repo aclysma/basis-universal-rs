@@ -188,7 +188,10 @@ impl TranscoderTextureFormat {
 
     /// Returns true if the transcoder texture type is a compressed format.
     pub fn is_compressed(self) -> bool {
-        unsafe { !sys::basis_transcoder_format_is_uncompressed(self.into()) }
+        match self {
+            Self::RGBA32 | Self::RGB565 | Self::BGR565 | Self::RGBA4444 => false,
+            _ => true,
+        }
     }
 
     /// Returns the # of bytes per pixel for uncompressed formats, or 0 for block texture formats.
@@ -286,20 +289,35 @@ impl TranscoderTextureFormat {
         original_width: u32,
         original_height: u32,
         total_slice_blocks: u32,
-        output_row_pitch_in_blocks_or_pixels: Option<u32>,
-        output_rows_in_pixels: Option<u32>,
+        mut output_row_pitch_in_blocks_or_pixels: Option<u32>,
+        mut output_rows_in_pixels: Option<u32>,
     ) -> bool {
-        true /*unsafe {
-                 sys::basis_validate_output_buffer_size(
-                     self.into(),
-                     output_blocks_buf_size_in_blocks_or_pixels,
-                     original_width,
-                     original_height,
-                     output_row_pitch_in_blocks_or_pixels.unwrap_or(0),
-                     output_rows_in_pixels.unwrap_or(0),
-                     total_slice_blocks,
-                 )
-             }*/
+        if !self.is_compressed() {
+            let output_row_pitch_in_blocks_or_pixels =
+                output_row_pitch_in_blocks_or_pixels.unwrap_or(original_width);
+
+            let output_rows_in_pixels = output_rows_in_pixels.unwrap_or(original_height);
+
+            if (output_blocks_buf_size_in_blocks_or_pixels
+                < (output_rows_in_pixels * output_row_pitch_in_blocks_or_pixels))
+            {
+                return false;
+            }
+        } else if (self == Self::FXT1_RGB) {
+            let num_blocks_fxt1_x = (original_width + 7) / 8;
+            let num_blocks_fxt1_y = (original_height + 3) / 4;
+            let total_blocks_fxt1 = num_blocks_fxt1_x * num_blocks_fxt1_y;
+
+            if (output_blocks_buf_size_in_blocks_or_pixels < total_blocks_fxt1) {
+                return false;
+            }
+        } else {
+            if (output_blocks_buf_size_in_blocks_or_pixels < total_slice_blocks) {
+                return false;
+            }
+        }
+
+        true
     }
 }
 
@@ -447,7 +465,18 @@ impl TranscoderBlockFormat {
 
     /// Returns true if the block format is a compressed format.
     pub fn is_compressed(self) -> bool {
-        true //unsafe { !sys::basis_block_format_is_uncompressed(self.into()) }
+        match self {
+            Self::RGB32
+            | Self::RGBA32
+            | Self::A32
+            | Self::RGB565
+            | Self::BGR565
+            | Self::RGBA4444
+            | Self::RGBA4444_COLOR
+            | Self::RGBA4444_ALPHA
+            | Self::RGBA4444_COLOR_OPAQUE => false,
+            _ => true,
+        }
     }
 
     /// Returns the block width for the specified texture format, which is currently either 4 or 8 for FXT1.
