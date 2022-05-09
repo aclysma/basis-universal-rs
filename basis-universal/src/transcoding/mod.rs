@@ -1,4 +1,3 @@
-use basis_universal_sys as sys;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Mutex;
 
@@ -21,21 +20,21 @@ lazy_static::lazy_static! {
 /// is protected by a lock and AtomicBool flag so it is safe and cheap to call multiple times, and
 /// correctly handles multiple threads trying to initialize at the same time.
 pub fn transcoder_init() {
-    unsafe {
-        // Early out if it has been initialized
+    // Early out if it has been initialized
+    if !TRANSCODER_INIT_CALLED.load(Ordering::Acquire) {
+        // Lock and check again to ensure that exactly one thread runs the init code and that
+        // all other threads wait for it to complete and don't re-run it.
+        let lock = TRANSCODER_INIT_LOCK.lock().unwrap();
         if !TRANSCODER_INIT_CALLED.load(Ordering::Acquire) {
-            // Lock and check again to ensure that exactly one thread runs the init code and that
-            // all other threads wait for it to complete and don't re-run it.
-            let lock = TRANSCODER_INIT_LOCK.lock().unwrap();
-            if !TRANSCODER_INIT_CALLED.load(Ordering::Acquire) {
-                // Run the init code
-                #[cfg(not(target_arch = "wasm32"))]
+            // Run the init code
+            #[cfg(not(target_arch = "wasm32"))]
+            unsafe {
                 sys::basisu_encoder_init();
-                #[cfg(target_arch = "wasm32")]
-                basis_universal_wasm::initialize_basis();
-                TRANSCODER_INIT_CALLED.store(true, Ordering::Release);
             }
-            std::mem::drop(lock);
+            #[cfg(target_arch = "wasm32")]
+            basis_universal_wasm::initialize_basis();
+            TRANSCODER_INIT_CALLED.store(true, Ordering::Release);
         }
+        std::mem::drop(lock);
     }
 }

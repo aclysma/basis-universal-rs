@@ -444,7 +444,7 @@ impl LowLevelUastcTranscoder {
         let output_block_or_pixel_stride_in_bytes =
             transcode_block_format.bytes_per_block_or_pixel();
 
-        let mut output = vec![0_u8; required_buffer_bytes];
+        let output = vec![0_u8; required_buffer_bytes];
         let success = unsafe {
             basis_universal_wasm::transcode_uastc_slice(
                 //self.0,

@@ -15,7 +15,7 @@ categories = ["game-development", "graphics", "api-bindings", "compression", "en
 basis-universal-sys = { version = "0.1.0", path = "../basis-universal-sys" }
 lazy_static = "1.4.0"
 bitflags = "1.2.1"
-basis-universal-wasm = { path = "../../basis-universal-rs-wasm" }
+basis-universal-wasm = { git = "https://github.com/expenses/basis-universal-rs-wasm" }
 js-sys = "0.3.57"
 
 [dev-dependencies]
