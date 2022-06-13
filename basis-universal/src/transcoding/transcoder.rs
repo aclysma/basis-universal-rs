@@ -412,7 +412,7 @@ impl LowLevelUastcTranscoder {
         transcoder_init();
         Self {
             #[cfg(not(target_arch = "wasm32"))]
-            inner: unsafe { LowLevelUastcTranscoder(sys::low_level_uastc_transcoder_new()) },
+            inner: unsafe { sys::low_level_uastc_transcoder_new() },
         }
     }
 
@@ -424,7 +424,8 @@ impl LowLevelUastcTranscoder {
         transcode_block_format: TranscoderBlockFormat,
     ) -> Result<Vec<u8>, TranscodeError> {
         let bc1_allow_threecolor_blocks = false;
-        //let transcoder_state = std::ptr::null_mut();
+        #[cfg(not(target_arch = "wasm32"))]
+        let transcoder_state = std::ptr::null_mut();
         let channel0 = 0;
         let channel1 = 3;
 
@@ -444,7 +445,37 @@ impl LowLevelUastcTranscoder {
         let output_block_or_pixel_stride_in_bytes =
             transcode_block_format.bytes_per_block_or_pixel();
 
+        #[cfg(not(target_arch = "wasm32"))]
+        let mut output = vec![0_u8; required_buffer_bytes];
+
+        #[cfg(not(target_arch = "wasm32"))]
+        let success = unsafe {
+            sys::low_level_uastc_transcoder_transcode_slice(
+                self.inner,
+                output.as_mut_ptr() as _,
+                slice_parameters.num_blocks_x,
+                slice_parameters.num_blocks_y,
+                data.as_ptr() as _,
+                data.len() as u32,
+                transcode_block_format.into(),
+                output_block_or_pixel_stride_in_bytes,
+                bc1_allow_threecolor_blocks,
+                slice_parameters.has_alpha,
+                slice_parameters.original_width,
+                slice_parameters.original_height,
+                output_row_pitch_in_blocks_or_pixels,
+                transcoder_state,
+                output_rows_in_pixels,
+                channel0,
+                channel1,
+                decode_flags.bits(),
+            )
+        };
+
+        #[cfg(target_arch = "wasm32")]
         let output = vec![0_u8; required_buffer_bytes];
+
+        #[cfg(target_arch = "wasm32")]
         let success = unsafe {
             basis_universal_wasm::transcode_uastc_slice(
                 //self.0,

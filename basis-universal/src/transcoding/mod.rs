@@ -1,3 +1,5 @@
+#[cfg(not(target_arch = "wasm32"))]
+use basis_universal_sys as sys;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Mutex;
 
