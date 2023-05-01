@@ -126,30 +126,8 @@ impl CompressorParams {
 
         unsafe {
             let mut flags = sys::compressor_params_get_pack_uastc_flags(self.0);
-            flags |= quality_level;
+            flags |= quality_level as i32; // bindgen reflects constants as signed integers. So even if it doesn't make sense for the quality level to be signed, it has to be.
             sys::compressor_params_set_pack_uastc_flags(self.0, flags);
-        }
-    }
-
-    /// Use the global codebook to compress the image. slightly smaller files, but lower quality,
-    /// slower encoding
-    pub fn set_use_global_codebook(
-        &mut self,
-        use_global_codebook: bool,
-    ) {
-        unsafe {
-            sys::compressor_params_set_global_sel_pal(self.0, use_global_codebook);
-        }
-    }
-
-    /// Automatically use virtual selector palettes on small images for slightly smaller files
-    /// (defaults to off for faster encoding time)
-    pub fn set_auto_use_global_codebook(
-        &mut self,
-        auto_use_global_codebook: bool,
-    ) {
-        unsafe {
-            sys::compressor_params_set_auto_global_sel_pal(self.0, auto_use_global_codebook);
         }
     }
 

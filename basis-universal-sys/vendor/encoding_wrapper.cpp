@@ -167,14 +167,6 @@ extern "C" {
         params->pParams->m_pack_uastc_flags = static_cast<uint32_t>(pack_uastc_flags);
     }
 
-    void compressor_params_set_global_sel_pal(CompressorParams *params, bool global_sel_pal) {
-        params->pParams->m_global_sel_pal = global_sel_pal;
-    }
-
-    void compressor_params_set_auto_global_sel_pal(CompressorParams *params, bool global_sel_pal) {
-        params->pParams->m_auto_global_sel_pal = global_sel_pal;
-    }
-
     void compressor_params_set_uastc(CompressorParams *params, bool is_uastc) {
         params->pParams->m_uastc = is_uastc;
     }

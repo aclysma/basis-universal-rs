@@ -36,8 +36,6 @@ fn test_compressor_params_smoketest_bindings() {
     compressor_params.set_print_status_to_stdout(false);
     compressor_params.set_etc1s_quality_level(crate::ETC1S_QUALITY_DEFAULT);
     compressor_params.set_uastc_quality_level(crate::UASTC_QUALITY_DEFAULT);
-    compressor_params.set_use_global_codebook(true);
-    compressor_params.set_auto_use_global_codebook(true);
     compressor_params.set_basis_format(BasisTextureFormat::UASTC4x4);
     compressor_params.set_generate_mipmaps(true);
 
