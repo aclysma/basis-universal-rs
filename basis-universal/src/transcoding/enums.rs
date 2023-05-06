@@ -3,7 +3,7 @@ use std::ffi::CStr;
 
 /// The type of data stored
 #[derive(Copy, Clone, Debug, PartialEq)]
-#[repr(u32)]
+#[repr(i32)]
 pub enum BasisTextureType {
     /// An arbitrary array of 2D RGB or RGBA images with optional mipmaps, array size = # images, each image may have a different resolution and # of mipmap levels
     TextureType2D = sys::basist_basis_texture_type_cBASISTexType2D,
@@ -305,7 +305,7 @@ impl TranscoderTextureFormat {
 
 bitflags::bitflags! {
     /// Flags that affect transcoding
-    pub struct DecodeFlags: u32 {
+    pub struct DecodeFlags: i32 {
         /// PVRTC1: decode non-pow2 ETC1S texture level to the next larger power of 2 (not implemented yet, but we're going to support it). Ignored if the slice's dimensions are already a power of 2.
         const PVRTC_DECODE_TO_NEXT_POW_2 = sys::basist_basisu_decode_flags_cDecodeFlagsPVRTCDecodeToNextPow2;
 

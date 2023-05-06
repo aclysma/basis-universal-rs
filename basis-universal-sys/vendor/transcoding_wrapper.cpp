@@ -195,7 +195,7 @@ extern "C" {
         uint32_t output_rows_in_pixels,
         int channel0,
         int channel1,
-        uint32_t decode_flags
+        int32_t decode_flags // Enums are reflected as signed integers in Rust.
     ) {
         return transcoder->pTranscoder->transcode_slice(
             pDst_blocks,
@@ -223,20 +223,17 @@ extern "C" {
     // basisu_transcoder
     //
     struct Transcoder {
-        basist::etc1_global_selector_codebook *pCodebook;
         basist::basisu_transcoder *pTranscoder;
     };
 
     Transcoder *transcoder_new() {
         Transcoder *transcoder = new Transcoder;
-        transcoder->pCodebook = new basist::etc1_global_selector_codebook(basist::g_global_selector_cb_size, basist::g_global_selector_cb);
-        transcoder->pTranscoder = new basist::basisu_transcoder(transcoder->pCodebook);
+        transcoder->pTranscoder = new basist::basisu_transcoder();
         return transcoder;
     };
 
     void transcoder_delete(Transcoder *transcoder) {
         delete transcoder->pTranscoder;
-        delete transcoder->pCodebook;
         delete transcoder;
     }
 
