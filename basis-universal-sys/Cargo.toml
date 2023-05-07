@@ -10,6 +10,7 @@ homepage = "https://github.com/aclysma/basis-universal-rs"
 description = "Bindings for the basis-universal Supercompressed GPU Texture Codec by Binomial"
 keywords = ["game", "basis-universal", "texture", "compression", "gpu"]
 categories = ["game-development", "graphics", "external-ffi-bindings", "compression", "encoding"]
+exclude = ["vendor/basis_universal/test_files", "vendor/basis_universal/webgl", "vendor/basis_universal/webgl_videotest"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
