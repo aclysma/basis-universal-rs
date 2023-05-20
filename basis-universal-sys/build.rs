@@ -15,10 +15,12 @@ fn build_with_common_settings() -> cc::Build {
 }
 
 fn main() {
+    let sse_support = cfg!(target_feature = "sse4.1");
+
     build_with_common_settings()
         .cpp(true)
         .define("BASISD_SUPPORT_KTX2_ZSTD", "0")
-        //.define("BASISU_SUPPORT_SSE", "1") TODO: expose this in a futher release
+        .define("BASISU_SUPPORT_SSE", if sse_support { "1" } else { "0" })
         .flag_if_supported("--std=c++11")
         .file("vendor/basis_universal/encoder/pvpngreader.cpp")
         .file("vendor/basis_universal/encoder/jpgd.cpp")
