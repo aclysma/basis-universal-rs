@@ -21,4 +21,4 @@ image = "0.23.13"
 lz4 = "1.23"
 
 [features]
-sse4_1 = ["basis-universal-sys/sse4_1"]
+hint_sse4_1 = ["basis-universal-sys/hint_sse4_1"]

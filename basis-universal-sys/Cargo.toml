@@ -18,4 +18,4 @@ exclude = ["vendor/basis_universal/test_files", "vendor/basis_universal/webgl", 
 cc = "1.0"
 
 [features]
-sse4_1 = []
+hint_sse4_1 = []
