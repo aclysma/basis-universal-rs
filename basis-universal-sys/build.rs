@@ -15,12 +15,22 @@ fn build_with_common_settings() -> cc::Build {
 }
 
 fn main() {
-    let sse_support = cfg!(target_feature = "sse4.1");
 
-    build_with_common_settings()
-        .cpp(true)
-        .define("BASISD_SUPPORT_KTX2_ZSTD", "0")
-        .define("BASISU_SUPPORT_SSE", if sse_support { "1" } else { "0" })
+    // Only allow the SSE flag if we compile for x86/x86_64
+    // See: https://github.com/aclysma/basis-universal-rs/pull/14#discussion_r1200978360
+    let build_with_sse4_1 = cfg!(feature = "sse4_1") && std::env::var("CARGO_CFG_TARGET_ARCH")
+        .expect("Cargo didn't set the CARGO_CFG_TARGET_ARCH env var")
+        .split(',')
+        .any(|arch| {arch == "x86_64" || arch == "x86"});
+
+    let mut build = build_with_common_settings();
+
+    if build_with_sse4_1 {
+       build.define("BASISU_SUPPORT_SSE", "1");
+    }
+
+    build.cpp(true)
+        //.define("BASISD_SUPPORT_KTX2_ZSTD", "0") TODO: expose in futher release
         .flag_if_supported("--std=c++11")
         .file("vendor/basis_universal/encoder/pvpngreader.cpp")
         .file("vendor/basis_universal/encoder/jpgd.cpp")
