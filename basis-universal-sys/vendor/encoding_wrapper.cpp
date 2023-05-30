@@ -187,7 +187,6 @@ extern "C" {
         params->pParams->m_no_endpoint_rdo = no_endpoint_rdo;
     }
 
-    // UASTC options
     void compressor_params_set_rdo_uastc(CompressorParams *params, bool rdo_uastc) {
         params->pParams->m_rdo_uastc = rdo_uastc;
     }
@@ -282,15 +281,5 @@ extern "C" {
 
     void basisu_encoder_init() {
         basisu::basisu_encoder_init();
-        printf("TEST!\n");
-        #ifdef BASISU_SUPPORT_SSE 1
-            printf("SSE Supported!\n");
-        #else 
-            printf("NO sse support!\n");
-        #endif
-
-        #ifdef BASISD_SUPPORT_KTX2_ZSTD
-               printf("BASISD_SUPPORT_KTX2_ZSTD\n");
-        #endif
     }
 }
