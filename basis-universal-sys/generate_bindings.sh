@@ -75,6 +75,11 @@ bindgen vendor/encoding_wrapper.cpp -o src/encoding_bindings.rs \
   --allowlist-function compressor_params_resize_source_image_list \
   --allowlist-function compressor_params_clear_source_image_list \
   \
+  --allowlist-function compressor_params_get_or_create_source_mipmap_image \
+  --allowlist-function compressor_params_resize_source_mipmap_image_list \
+  --allowlist-function compressor_params_clear_source_mipmap_image_list \
+  --allowlist-function compressor_params_resize_source_mipmap_image_level_list \
+  \
   --allowlist-function compressor_params_set_status_output \
   --allowlist-function compressor_params_set_quality_level \
   --allowlist-function compressor_params_get_pack_uastc_flags \
