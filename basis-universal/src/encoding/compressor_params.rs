@@ -94,13 +94,13 @@ impl CompressorParams {
     pub fn source_mipmap_image_mut(
         &mut self,
         image_index: u32,
-        level: u32
+        level: u32,
     ) -> CompressorImageRef {
         unsafe {
             CompressorImageRef(sys::compressor_params_get_or_create_source_mipmap_image(
                 self.0,
                 image_index,
-                level
+                level,
             ))
         }
     }
@@ -121,10 +121,12 @@ impl CompressorParams {
     pub fn resize_source_mipmap_level_image_list(
         &mut self,
         level: u32,
-        size: u32
+        size: u32,
     ) {
         unsafe {
-            sys::compressor_params_resize_source_mipmap_image_level_list(self.0, level as _, size as _);
+            sys::compressor_params_resize_source_mipmap_image_level_list(
+                self.0, level as _, size as _,
+            );
         }
     }
 
