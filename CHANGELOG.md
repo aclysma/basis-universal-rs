@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.1
+ * Additional bindings to support providing custom mip levels 
+
 ## 0.3.0
  * Updated to most recent up-stream (1.16.x)
  * `compressor_params_set_global_sel_pal`, `compressor_params_set_auto_global_sel_pal` and
