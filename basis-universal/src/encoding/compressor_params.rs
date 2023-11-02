@@ -89,6 +89,51 @@ impl CompressorParams {
         }
     }
 
+    /// Get a reference to the source index. The internal list of source images is resized as needed
+    /// such that the image will exist
+    pub fn source_mipmap_image_mut(
+        &mut self,
+        image_index: u32,
+        level: u32
+    ) -> CompressorImageRef {
+        unsafe {
+            CompressorImageRef(sys::compressor_params_get_or_create_source_mipmap_image(
+                self.0,
+                image_index,
+                level
+            ))
+        }
+    }
+
+    /// Resizes the source image list. If the provided length is shorter than the list, the data
+    /// beyond the provided length is truncated.
+    pub fn resize_source_mipmap_image_list(
+        &mut self,
+        size: u32,
+    ) {
+        unsafe {
+            sys::compressor_params_resize_source_mipmap_image_list(self.0, size as _);
+        }
+    }
+
+    /// Resizes the source image list. If the provided length is shorter than the list, the data
+    /// beyond the provided length is truncated.
+    pub fn resize_source_mipmap_level_image_list(
+        &mut self,
+        level: u32,
+        size: u32
+    ) {
+        unsafe {
+            sys::compressor_params_resize_source_mipmap_image_level_list(self.0, level as _, size as _);
+        }
+    }
+
+    /// Resets the image list to be zero-length
+    pub fn clear_source_mipmap_image_list(&mut self) {
+        unsafe {
+            sys::compressor_params_clear_source_mipmap_image_list(self.0);
+        }
+    }
     //
     // These set parameters for compression
     //

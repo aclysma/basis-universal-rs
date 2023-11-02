@@ -147,6 +147,31 @@ extern "C" {
         params->pParams->clear();
     }
 
+    // These function are used to load custom mip map image data into the compressor
+    //
+    basisu::image *compressor_params_get_or_create_source_mipmap_image(CompressorParams *params, uint32_t index, uint32_t level) {
+        if (params->pParams->m_source_mipmap_images.size() < index + 1) {
+            params->pParams->m_source_mipmap_images.resize(index + 1);
+        }
+        if (params->pParams->m_source_mipmap_images[index].size() < level + 1) {
+            params->pParams->m_source_mipmap_images[index].resize(level + 1);
+        }
+
+        return &params->pParams->m_source_mipmap_images[index][level];
+    }
+
+    void compressor_params_resize_source_mipmap_image_list(CompressorParams *params, size_t size) {
+        params->pParams->m_source_mipmap_images.resize(size);
+    }
+
+    void compressor_params_resize_source_mipmap_image_level_list(CompressorParams *params, size_t level, size_t size) {
+        params->pParams->m_source_mipmap_images[level].resize(size);
+    }
+
+    void compressor_params_clear_source_mipmap_image_list(CompressorParams *params) {
+        params->pParams->m_source_mipmap_images.clear();
+    }
+
     //
     // These set parameters for compression
     //
