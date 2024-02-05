@@ -54,6 +54,7 @@ pub fn main() {
     //
     let mut compressor_params = CompressorParams::new();
     compressor_params.set_generate_mipmaps(true);
+    // compressor_params.set_create_ktx2_file(true);
     compressor_params.set_basis_format(BasisTextureFormat::UASTC4x4);
     compressor_params.set_uastc_quality_level(basis_universal::UASTC_QUALITY_DEFAULT);
     compressor_params.set_print_status_to_stdout(false);
@@ -90,6 +91,11 @@ pub fn main() {
     // You could write it to disk like this
     let basis_file = compressor.basis_file();
     // std::fs::write("example_encoded_image.basis", basis_file).unwrap();
+
+    // Or maybe prefer KTX2 format
+    // You will need to uncomment the above `set_create_ktx2_file` line first
+    // let ktx2_file = compressor.ktx2_file();
+    // std::fs::write("example_encoded_image.ktx2", ktx2_file).unwrap();
 
     let mut transcoder = Transcoder::new();
     let mip_level_count = transcoder.image_level_count(basis_file, 0);

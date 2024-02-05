@@ -233,6 +233,10 @@ extern "C" {
         params->pParams->m_userdata1 = userdata1;
     }
 
+    void compressor_params_set_create_ktx2_file(CompressorParams *params, bool create_ktx2_file) {
+        params->pParams->m_create_ktx2_file = create_ktx2_file;
+    }
+
     // compressor_params_set_multithreaded is not implemented because this parameter is controlled by thread count
     // passed to compressor_new()
 
@@ -284,6 +288,14 @@ extern "C" {
     CompressorBasisFile compressor_get_output_basis_file(Compressor *compressor) {
         CompressorBasisFile file;
         const basisu::uint8_vec &basis_file = compressor->pCompressor->get_output_basis_file();
+        file.pData = basis_file.data();
+        file.length = basis_file.size();
+        return file;
+    }
+
+    CompressorBasisFile compressor_get_output_ktx2_file(Compressor *compressor) {
+        CompressorBasisFile file;
+        const basisu::uint8_vec &basis_file = compressor->pCompressor->get_output_ktx2_file();
         file.pData = basis_file.data();
         file.length = basis_file.size();
         return file;

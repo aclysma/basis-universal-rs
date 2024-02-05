@@ -140,7 +140,7 @@ fn bindgen_test_layout_basisu_image() {
     );
 }
 extern "C" {
-    #[link_name = "\u{1}?debug_text@image@basisu@@QEAAXIIIIAEBVcolor_rgba@2@PEBV32@_NPEBDZZ"]
+    #[link_name = "\u{1}__ZN6basisu5image10debug_textEjjjjRKNS_10color_rgbaEPS2_bPKcz"]
     pub fn basisu_image_debug_text(
         this: *mut basisu_image,
         x_ofs: u32,
@@ -585,6 +585,12 @@ extern "C" {
         userdata1: u32,
     );
 }
+extern "C" {
+    pub fn compressor_params_set_create_ktx2_file(
+        params: *mut CompressorParams,
+        create_ktx2_file: bool,
+    );
+}
 #[repr(C)]
 #[repr(align(8))]
 #[derive(Debug, Copy, Clone)]
@@ -662,6 +668,9 @@ fn bindgen_test_layout_CompressorBasisFile() {
 }
 extern "C" {
     pub fn compressor_get_output_basis_file(compressor: *mut Compressor) -> CompressorBasisFile;
+}
+extern "C" {
+    pub fn compressor_get_output_ktx2_file(compressor: *mut Compressor) -> CompressorBasisFile;
 }
 extern "C" {
     pub fn compressor_get_basis_file_size(compressor: *const Compressor) -> u32;
