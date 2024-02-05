@@ -38,6 +38,7 @@ fn test_compressor_params_smoketest_bindings() {
     compressor_params.set_uastc_quality_level(crate::UASTC_QUALITY_DEFAULT);
     compressor_params.set_basis_format(BasisTextureFormat::UASTC4x4);
     compressor_params.set_generate_mipmaps(true);
+    compressor_params.set_create_ktx2_file(true);
 
     compressor_params.reset();
 }
@@ -82,6 +83,7 @@ fn test_encode_image() {
 
     let mut compressor_params = CompressorParams::new();
     compressor_params.set_generate_mipmaps(true);
+    compressor_params.set_create_ktx2_file(true);
 
     //
     // Set up the source image in the params
@@ -113,8 +115,13 @@ fn test_encode_image() {
 
     // By default the test shouldn't write to disk, but this is a quick way to put it on disk to
     // check that it works with basisu
-    let _basis_file = compressor.basis_file();
+    let basis_file = compressor.basis_file();
+    assert!(!basis_file.is_empty());
     //std::fs::write("test_assets/test_encode_image.basis", basis_file).unwrap();
+
+    let ktx2_file = compressor.ktx2_file();
+    assert!(!ktx2_file.is_empty());
+    // std::fs::write("test_assets/test_encode_image.ktx2", ktx2_file).unwrap();
 
     std::mem::drop(compressor);
 }

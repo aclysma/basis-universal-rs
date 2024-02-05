@@ -88,6 +88,15 @@ impl Compressor {
         }
     }
 
+    /// Access the KTX2 compressed data. May be empty if `process()` was not yet called
+    /// or `create_ktx2_file` parameter is false (default).
+    pub fn ktx2_file(&self) -> &[u8] {
+        unsafe {
+            let result = sys::compressor_get_output_ktx2_file(self.0);
+            std::slice::from_raw_parts(result.pData, result.length as usize)
+        }
+    }
+
     /// Return the size of the encoded basis-universal data
     pub fn basis_file_size(&self) -> u32 {
         unsafe { sys::compressor_get_basis_file_size(self.0) }

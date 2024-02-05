@@ -309,6 +309,17 @@ impl CompressorParams {
         }
     }
 
+    /// Set if also create compressed data in KTX2 format
+    ///
+    /// By default this is set to false and calling [Compressor::ktx2_file](crate::Compressor::ktx2_file)
+    /// will return an empty result.
+    pub fn set_create_ktx2_file(
+        &mut self,
+        create_ktx2_file: bool,
+    ) {
+        unsafe { sys::compressor_params_set_create_ktx2_file(self.0, create_ktx2_file) }
+    }
+
     /// The `basisu` command line compressor offers a -normal_map parameter that sets several
     /// values automatically. This convenience function mimics that parameter.
     ///
